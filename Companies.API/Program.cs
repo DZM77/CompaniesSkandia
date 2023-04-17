@@ -1,12 +1,13 @@
 
 using Companies.API.Data;
+using Companies.API.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace Companies.API
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -20,8 +21,10 @@ namespace Companies.API
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            builder.Services.AddCorsPolicy();
 
             var app = builder.Build();
+            await app.SeedDataAsync();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -29,6 +32,8 @@ namespace Companies.API
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
+            app.UseCors("CorsPolicy");
 
             app.UseHttpsRedirection();
 

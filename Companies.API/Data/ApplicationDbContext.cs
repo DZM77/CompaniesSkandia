@@ -7,9 +7,17 @@ namespace Companies.API.Data
     {
 
         public DbSet<Company> Companies => Set<Company>();
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
            : base(options)
         {
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+           // modelBuilder.Entity<Company>().HasData()
         }
 
     }
