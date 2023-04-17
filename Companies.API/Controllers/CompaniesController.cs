@@ -1,5 +1,6 @@
 ﻿using Companies.API.Data;
 using Companies.Core.Entities;
+using Companies.Shared.DataTransferObjects;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,13 +19,18 @@ namespace Companies.API.Controllers
 
         // GET: api/Companies
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Company>>> GetCompany()
+        public async Task<ActionResult<IEnumerable<CompanyDto>>> GetCompany()
         {
-            if (_context.Companies == null)
+            IQueryable<Company> companies = _context.Companies;
+            var companyDtos = companies.Select(c => new CompanyDto
             {
-                return NotFound();
-            }
-            return await _context.Companies.ToListAsync();
+                Name = c.Name,
+                Address = c.Address,
+                Id = c.Id,
+                Country = c.Country
+            });
+
+            return await companyDtos.ToListAsync();
         }
 
         // GET: api/Companies/5
