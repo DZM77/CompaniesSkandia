@@ -30,17 +30,14 @@ namespace Companies.API.Controllers
                 Country = c.Country
             });
 
-            return await companyDtos.ToListAsync();
+            return Ok(await companyDtos.ToListAsync());
         }
 
         // GET: api/Companies/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Company>> GetCompany(Guid id)
         {
-            if (_context.Companies == null)
-            {
-                return NotFound();
-            }
+            
             var company = await _context.Companies.FindAsync(id);
 
             if (company == null)
@@ -48,7 +45,17 @@ namespace Companies.API.Controllers
                 return NotFound();
             }
 
-            return company;
+            var companyDto = new CompanyDto
+            {
+                Id = company.Id,
+                Name = company.Name,
+                Address = company.Address,
+                Country = company.Country,
+            };
+
+
+
+            return Ok(companyDto);
         }
 
         // PUT: api/Companies/5

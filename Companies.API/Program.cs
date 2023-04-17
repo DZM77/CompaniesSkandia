@@ -17,7 +17,9 @@ namespace Companies.API
                options.UseSqlServer(builder.Configuration.GetConnectionString("ApplicationDbContext") ?? throw new InvalidOperationException("Connection string 'ApplicationDbContext' not found.")));
 
 
-            builder.Services.AddControllers();
+            builder.Services.AddControllers(configure => configure.ReturnHttpNotAcceptable = true)
+                            .AddXmlDataContractSerializerFormatters();
+
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
