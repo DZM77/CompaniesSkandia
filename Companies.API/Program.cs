@@ -27,6 +27,14 @@ namespace Companies.API
 
             app.UseAuthorization();
 
+            app.Map("/hej", builder =>
+            {
+                builder.Run(async context =>
+                {
+                    await context.Response.WriteAsync("Application return response here if route starts with hej");
+                });
+            });
+
 
             app.MapControllers();
 
