@@ -6,7 +6,8 @@ namespace Companies.API.Data
     public class ApplicationDbContext : DbContext
     {
 
-        public DbSet<Company> Companies => Set<Company>();
+       public DbSet<Company> Companies => Set<Company>();
+       public DbSet<Employee> Employees => Set<Employee>();
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
            : base(options)
