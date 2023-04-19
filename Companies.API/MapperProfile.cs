@@ -14,6 +14,7 @@ namespace Companies.API
                 .ForMember(dto => dto.Address, opt => opt.MapFrom(c => $"{c.Address}{(string.IsNullOrEmpty(c.Country) ? string.Empty : ", ")}{c.Country}"));
 
             CreateMap<CompanyForCreationDto, Company>();
+            CreateMap<CompanyForUpdateDto, Company>();
 
 
             //EmployeeMappings
