@@ -34,19 +34,13 @@ namespace Companies.API.Controllers
 
             if (company is null) return NotFound();
 
-            var employees =  context.Employees.Where(e => e.CompanyId.Equals(companyId));
+            var employees = string.IsNullOrWhiteSpace(parameters.SearchByName) ?
+              context.Employees.Where(e => e.CompanyId.Equals(companyId)) :
+              context.Employees.Where(e => e.CompanyId.Equals(companyId)).Where(e => e.Name!.StartsWith(parameters.SearchByName));
 
             var pagedResult = await PagedList<Employee>.CreateAsync(employees, parameters.PageNumber, parameters.PageSize);
 
             var employeeDtos = mapper.Map<IEnumerable<EmployeeDto>>(pagedResult);
-
-            //var paginationMetadata = new
-            //{
-            //    totalCount = pagedResult.TotalCount,
-            //    pageSize = pagedResult.PageSize,
-            //    currentPage = pagedResult.CurrentPage,
-            //    totalPages = pagedResult.TotalPages
-            //};
 
             Response.Headers.Add("X-Pagination",
                    JsonSerializer.Serialize(pagedResult.MetaData));
@@ -55,6 +49,8 @@ namespace Companies.API.Controllers
             return Ok(employeeDtos);
 
         }
+
+        
 
         [HttpGet("{employeeId:guid}")]
         public async Task<IActionResult> GetEmployeesForCompany(Guid companyId, Guid employeeId)
