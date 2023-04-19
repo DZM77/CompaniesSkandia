@@ -1,9 +1,8 @@
 ﻿using Bogus;
-using Companies.API.Data;
 using Companies.Core.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace Companies.Repositories.Data
+namespace Companies.API.Data
 {
     public class SeedData
     {

@@ -1,6 +1,6 @@
 ﻿using Companies.API.Data;
+using Companies.API.DataTransferObjects;
 using Companies.Core.Entities;
-using Companies.Shared.DataTransferObjects;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 

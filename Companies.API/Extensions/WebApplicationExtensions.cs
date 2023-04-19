@@ -1,5 +1,4 @@
 ﻿using Companies.API.Data;
-using Companies.Repositories.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace Companies.API.Extensions

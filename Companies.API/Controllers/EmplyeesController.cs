@@ -1,5 +1,5 @@
 ﻿using Companies.API.Data;
-using Companies.Shared.DataTransferObjects;
+using Companies.API.DataTransferObjects;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;

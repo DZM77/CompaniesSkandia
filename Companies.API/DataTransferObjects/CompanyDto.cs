@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Companies.Shared.DataTransferObjects
+namespace Companies.API.DataTransferObjects
 {
-    public record EmployeeDto
+    public record CompanyDto()
     {
         public Guid Id { get; init; }
         public string? Name { get; init; }
-        public int Age { get; init; }
-        public string? Position { get; init; }
+        public string? Address { get; init; }
+        public string? Country { get; init; }
     }
 }
