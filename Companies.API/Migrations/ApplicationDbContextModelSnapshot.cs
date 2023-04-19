@@ -44,7 +44,7 @@ namespace Companies.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Companies");
+                    b.ToTable("Companies", (string)null);
                 });
 
             modelBuilder.Entity("Companies.Core.Entities.Employee", b =>
@@ -73,7 +73,7 @@ namespace Companies.API.Migrations
 
                     b.HasIndex("CompanyId");
 
-                    b.ToTable("Employees");
+                    b.ToTable("Employees", (string)null);
                 });
 
             modelBuilder.Entity("Companies.Core.Entities.Employee", b =>

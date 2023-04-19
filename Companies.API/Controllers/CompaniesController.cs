@@ -17,7 +17,7 @@ namespace Companies.API.Controllers
             _context = context;
         }
 
-        // GET: api/Companies
+       
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CompanyDto>>> GetCompany()
         {
@@ -92,16 +92,32 @@ namespace Companies.API.Controllers
         // POST: api/Companies
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Company>> PostCompany(Company company)
+        public async Task<ActionResult<Company>> PostCompany(CompanyForCreationDto company)
         {
-            if (_context.Companies == null)
+            if (company is null)
             {
-                return Problem("Entity set 'ApplicationDbContext.Company'  is null.");
+                return BadRequest();
             }
-            _context.Companies.Add(company);
+          
+            var createdCompany = new Company()
+            {
+                Name = company.Name!,
+                Address = company.Address!,
+                Country = company.Country!,
+            };
+
+            _context.Companies.Add(createdCompany);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetCompany", new { id = company.Id }, company);
+            var companyToReturn = new CompanyDto
+            {
+                Name = createdCompany.Name,
+                Address = createdCompany.Address,
+                Country = createdCompany.Country,
+                Id = createdCompany.Id
+            };
+
+            return CreatedAtAction(nameof(GetCompany), new { id = companyToReturn.Id }, company);
         }
 
         // DELETE: api/Companies/5
