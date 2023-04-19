@@ -1,10 +1,13 @@
 ﻿using AutoMapper;
 using Companies.API.Data;
 using Companies.API.DataTransferObjects;
+using Companies.API.Paging;
+using Companies.Core.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
 
 namespace Companies.API.Controllers
 {
@@ -22,7 +25,7 @@ namespace Companies.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetEmployeesForCompany(Guid companyId)
+        public async Task<IActionResult> GetEmployeesForCompany(Guid companyId,[FromQuery] ResourceParameters parameters)
         {
             var company = await context.Companies
                                       .Where(c => c.Id.Equals(companyId))
@@ -31,9 +34,23 @@ namespace Companies.API.Controllers
 
             if (company is null) return NotFound();
 
-            var employees = await context.Employees.Where(e => e.CompanyId.Equals(companyId)).ToListAsync();
+            var employees =  context.Employees.Where(e => e.CompanyId.Equals(companyId));
 
-            var employeeDtos = mapper.Map<IEnumerable<EmployeeDto>>(employees);
+            var pagedResult = await PagedList<Employee>.CreateAsync(employees, parameters.PageNumber, parameters.PageSize);
+
+            var employeeDtos = mapper.Map<IEnumerable<EmployeeDto>>(pagedResult);
+
+            //var paginationMetadata = new
+            //{
+            //    totalCount = pagedResult.TotalCount,
+            //    pageSize = pagedResult.PageSize,
+            //    currentPage = pagedResult.CurrentPage,
+            //    totalPages = pagedResult.TotalPages
+            //};
+
+            Response.Headers.Add("X-Pagination",
+                   JsonSerializer.Serialize(pagedResult.MetaData));
+
 
             return Ok(employeeDtos);
 
