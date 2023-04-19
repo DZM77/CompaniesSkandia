@@ -24,6 +24,7 @@ namespace Companies.API
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddCorsPolicy();
+            builder.Services.AddAutoMapper(typeof(MapperProfile));
 
             var app = builder.Build();
             await app.SeedDataAsync();

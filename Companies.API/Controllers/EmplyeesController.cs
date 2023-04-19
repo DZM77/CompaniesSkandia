@@ -1,4 +1,5 @@
-﻿using Companies.API.Data;
+﻿using AutoMapper;
+using Companies.API.Data;
 using Companies.API.DataTransferObjects;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -11,10 +12,12 @@ namespace Companies.API.Controllers
     public class EmplyeesController : ControllerBase
     {
         private readonly ApplicationDbContext context;
+        private readonly IMapper mapper;
 
-        public EmplyeesController(ApplicationDbContext context)
+        public EmplyeesController(ApplicationDbContext context, IMapper mapper)
         {
             this.context = context;
+            this.mapper = mapper;
         }
 
         [HttpGet]
@@ -29,13 +32,15 @@ namespace Companies.API.Controllers
 
             var employees = await context.Employees.Where(e => e.CompanyId.Equals(companyId)).ToListAsync();
 
-            var employeeDtos = employees.Select(e => new EmployeeDto()
-            {
-                Id = e.Id,
-                Name = e.Name,
-                Age = e.Age,
-                Position = e.Position
-            });
+            //var employeeDtos = employees.Select(e => new EmployeeDto()
+            //{
+            //    Id = e.Id,
+            //    Name = e.Name,
+            //    Age = e.Age,
+            //    Position = e.Position
+            //});
+
+            var employeeDtos = mapper.Map<IEnumerable<EmployeeDto>>(employees);
 
             return Ok(employeeDtos);
 

@@ -1,4 +1,5 @@
-﻿using Companies.API.Data;
+﻿using AutoMapper;
+using Companies.API.Data;
 using Companies.API.DataTransferObjects;
 using Companies.Core.Entities;
 using Microsoft.AspNetCore.Mvc;
@@ -11,26 +12,28 @@ namespace Companies.API.Controllers
     public class CompaniesController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly IMapper mapper;
 
-        public CompaniesController(ApplicationDbContext context)
+        public CompaniesController(ApplicationDbContext context, IMapper mapper)
         {
             _context = context;
+            this.mapper = mapper;
         }
 
        
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CompanyDto>>> GetCompany()
         {
-            IQueryable<Company> companies = _context.Companies;
-            var companyDtos = companies.Select(c => new CompanyDto
-            {
-                Name = c.Name,
-                Address = c.Address,
-                Id = c.Id,
-                Country = c.Country
-            });
+            //IQueryable<Company> companies = _context.Companies;
+            //var companyDtos = companies.Select(c => new CompanyDto
+            //{
+            //    Name = c.Name,
+            //    Address = c.Address,
+            //    Id = c.Id,
+            //    Country = c.Country
+            //});
 
-            return Ok(await companyDtos.ToListAsync());
+            return Ok(await mapper.ProjectTo<CompanyDto>(_context.Companies).ToListAsync());
         }
 
         // GET: api/Companies/5
@@ -45,15 +48,7 @@ namespace Companies.API.Controllers
                 return NotFound();
             }
 
-            var companyDto = new CompanyDto
-            {
-                Id = company.Id,
-                Name = company.Name,
-                Address = company.Address,
-                Country = company.Country,
-            };
-
-
+           var companyDto = mapper.Map<CompanyDto>(company);
 
             return Ok(companyDto);
         }
@@ -94,29 +89,19 @@ namespace Companies.API.Controllers
         [HttpPost]
         public async Task<ActionResult<Company>> PostCompany(CompanyForCreationDto company)
         {
+
             if (company is null)
             {
                 return BadRequest();
             }
           
-            var createdCompany = new Company()
-            {
-                Name = company.Name!,
-                Address = company.Address!,
-                Country = company.Country!,
-            };
+            var createdCompany = mapper.Map<Company>(company);  
 
             _context.Companies.Add(createdCompany);
             await _context.SaveChangesAsync();
 
-            var companyToReturn = new CompanyDto
-            {
-                Name = createdCompany.Name,
-                Address = createdCompany.Address,
-                Country = createdCompany.Country,
-                Id = createdCompany.Id
-            };
-
+            var companyToReturn = mapper.Map<CompanyDto>(createdCompany);
+  
             return CreatedAtAction(nameof(GetCompany), new { id = companyToReturn.Id }, company);
         }
 
