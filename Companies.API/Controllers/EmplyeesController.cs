@@ -39,6 +39,26 @@ namespace Companies.API.Controllers
 
         }
 
+        [HttpGet("{employeeId:guid}")]
+        public async Task<IActionResult> GetEmployeesForCompany(Guid companyId, Guid employeeId)
+        {
+            var company = await context.Companies
+                                      .Where(c => c.Id.Equals(companyId))
+                                      .AsNoTracking()
+                                      .FirstOrDefaultAsync();
+
+            if (company is null) return NotFound();
+
+            var employee = await context.Employees.FirstOrDefaultAsync(e => e.CompanyId.Equals(companyId));
+
+            if (employee is null) return NotFound();
+
+            var employeeDto = mapper.Map<EmployeeDto>(employee);
+
+            return Ok(employeeDto);
+
+        }
+
         [HttpPatch("{id:guid}")]
         public async Task<IActionResult> PartiallyUpdateEmployeeForCompany(
             Guid companyId,

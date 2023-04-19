@@ -1,6 +1,7 @@
 
 using Companies.API.Data;
 using Companies.API.Extensions;
+using Companies.API.Middleware;
 using Microsoft.EntityFrameworkCore;
 
 namespace Companies.API
@@ -46,6 +47,8 @@ namespace Companies.API
 
             app.UseAuthorization();
 
+            app.UseDemo();
+
             app.Map("/hej", builder =>
             {
                 builder.Run(async context =>
@@ -53,6 +56,11 @@ namespace Companies.API
                     await context.Response.WriteAsync("Application return response here if route starts with hej");
                 });
             });
+
+            app.MapWhen(context => context.Request.Path.StartsWithSegments("/api/map"), builder => builder.Run(async context =>
+            {
+                await context.Response.WriteAsync("Application return response from MapWhen");
+            }));
 
 
             app.MapControllers();
