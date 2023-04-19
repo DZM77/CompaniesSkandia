@@ -102,17 +102,14 @@ namespace Companies.API.Controllers
 
             var companyToReturn = mapper.Map<CompanyDto>(createdCompany);
   
-            return CreatedAtAction(nameof(GetCompany), new { id = companyToReturn.Id }, company);
+            return CreatedAtAction(nameof(GetCompany), new { id = companyToReturn.Id }, companyToReturn);
         }
 
         // DELETE: api/Companies/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCompany(Guid id)
         {
-            if (_context.Companies == null)
-            {
-                return NotFound();
-            }
+           
             var company = await _context.Companies.FindAsync(id);
             if (company == null)
             {
