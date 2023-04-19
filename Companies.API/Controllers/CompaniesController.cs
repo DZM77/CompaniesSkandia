@@ -22,7 +22,7 @@ namespace Companies.API.Controllers
 
        
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<CompanyDto>>> GetCompany()
+        public async Task<ActionResult<IEnumerable<CompanyDto>>> GetCompany(bool includeEmployees = false)
         {
             //IQueryable<Company> companies = _context.Companies;
             //var companyDtos = companies.Select(c => new CompanyDto
@@ -33,7 +33,15 @@ namespace Companies.API.Controllers
             //    Country = c.Country
             //});
 
-            return Ok(await mapper.ProjectTo<CompanyDto>(_context.Companies).ToListAsync());
+            //Dont work
+            //var dto = includeEmployees ?  mapper.ProjectTo<CompanyDto>(_context.Companies.Include(c => c.Employees))
+            //                           :  mapper.ProjectTo<CompanyDto>(_context.Companies);
+            //                           
+
+            var dtos = includeEmployees ? mapper.Map<IEnumerable<CompanyDto>>(await _context.Companies.Include(c => c.Employees).ToListAsync())
+                                     : mapper.Map<IEnumerable<CompanyDto>>(await _context.Companies.ToListAsync());
+
+            return Ok(dtos);
         }
 
         // GET: api/Companies/5
