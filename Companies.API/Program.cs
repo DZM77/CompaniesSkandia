@@ -18,6 +18,7 @@ namespace Companies.API
 
 
             builder.Services.AddControllers(configure => configure.ReturnHttpNotAcceptable = true)
+                            .AddNewtonsoftJson()
                             .AddXmlDataContractSerializerFormatters();
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

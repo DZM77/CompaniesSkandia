@@ -2,6 +2,7 @@
 using Companies.API.Data;
 using Companies.API.DataTransferObjects;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -32,18 +33,41 @@ namespace Companies.API.Controllers
 
             var employees = await context.Employees.Where(e => e.CompanyId.Equals(companyId)).ToListAsync();
 
-            //var employeeDtos = employees.Select(e => new EmployeeDto()
-            //{
-            //    Id = e.Id,
-            //    Name = e.Name,
-            //    Age = e.Age,
-            //    Position = e.Position
-            //});
-
             var employeeDtos = mapper.Map<IEnumerable<EmployeeDto>>(employees);
 
             return Ok(employeeDtos);
 
+        }
+
+        [HttpPatch("{id:guid}")]
+        public async Task<IActionResult> PartiallyUpdateEmployeeForCompany(
+            Guid companyId,
+            Guid id,
+            JsonPatchDocument<EmployeeForUpdateDto> patchDoc)
+        {
+            if (patchDoc is null)
+                return BadRequest("No patchdokument");
+
+            var company = await context.Companies
+                                        .FirstOrDefaultAsync(c => c.Id.Equals(companyId));
+
+            if (company is null) return NotFound();
+
+            var employeeToPatch = await context.Employees.FirstOrDefaultAsync(e => e.Id.Equals(id));
+
+            var dto = mapper.Map<EmployeeForUpdateDto>(employeeToPatch);
+
+            patchDoc.ApplyTo(dto, ModelState);
+
+            TryValidateModel(dto);
+
+            if (!ModelState.IsValid)
+                return UnprocessableEntity(ModelState);
+
+            mapper.Map(dto, employeeToPatch);
+            await context.SaveChangesAsync();
+
+            return NoContent();
         }
     }
 }
