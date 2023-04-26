@@ -1,9 +1,10 @@
 ﻿using Companies.Core.Entities;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Companies.API.Data
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : IdentityDbContext<Employee>
     {
 
        public DbSet<Company> Companies => Set<Company>();

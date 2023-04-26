@@ -2,6 +2,8 @@
 using Companies.API.Data;
 using Companies.API.Extensions;
 using Companies.API.Middleware;
+using Companies.Core.Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace Companies.API
@@ -21,6 +23,21 @@ namespace Companies.API
             builder.Services.AddControllers(configure => configure.ReturnHttpNotAcceptable = true)
                             .AddNewtonsoftJson()
                             .AddXmlDataContractSerializerFormatters();
+
+
+            builder.Services.AddAuthentication();
+            builder.Services.AddIdentityCore<Employee>(options =>
+            {
+                options.Password.RequireDigit = false;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequiredLength = 3;
+                options.User.RequireUniqueEmail = true;
+            })
+                            .AddEntityFrameworkStores<ApplicationDbContext>()
+                            .AddDefaultTokenProviders();
+
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
