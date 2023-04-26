@@ -2,6 +2,11 @@
 using Companies.API.DataTransferObjects;
 using Companies.Core.Entities;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
+using System.Configuration;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace Companies.API.Services
 {
@@ -9,11 +14,67 @@ namespace Companies.API.Services
     {
         private readonly IMapper mapper;
         private readonly UserManager<User> userManager;
+        private readonly IConfiguration configuration;
+        private User? user;
 
-        public AuthenticationService(IMapper mapper, UserManager<User> userManager)
+        public AuthenticationService(IMapper mapper, UserManager<User> userManager, IConfiguration configuration)
         {
             this.mapper = mapper;
             this.userManager = userManager;
+            this.configuration = configuration;
+        }
+
+        public async Task<string> CreateTokenAsync()
+        {
+            var signingCredentials = GetSigningCredentials();
+            var claims = await GetClaimsAsync();
+            var tokenOptions = GenerateTokenOptions(signingCredentials, claims);
+            return new JwtSecurityTokenHandler().WriteToken(tokenOptions);
+        }
+
+        private JwtSecurityToken GenerateTokenOptions(SigningCredentials signingCredentials, List<Claim> claims)
+        {
+            var jwtSettings = configuration.GetSection("JwtSettings");
+
+            var tokenOptions = new JwtSecurityToken(
+                                        issuer: jwtSettings["validIssuer"],
+                                        audience: jwtSettings["validAudience"],
+                                        claims: claims,
+                                        expires: DateTime.Now.AddMinutes(Convert.ToDouble(jwtSettings["expires"])),
+                                        signingCredentials: signingCredentials);
+
+            return tokenOptions;
+        }
+
+        private async Task<List<Claim>> GetClaimsAsync()
+        {
+            ArgumentNullException.ThrowIfNull(nameof(user));
+
+            var claims = new List<Claim>
+                             {
+                                  new Claim(ClaimTypes.Name, user?.UserName!),
+                                  new Claim("Age", user!.Age.ToString()!)
+                             };
+
+            var roles = await userManager.GetRolesAsync(user!);
+
+            foreach (var role in roles)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, role));
+            }
+
+            return claims;
+        }
+
+        private SigningCredentials GetSigningCredentials()
+        {
+            var keyFromEnviroment = Environment.GetEnvironmentVariable("SECRET");
+            ArgumentNullException.ThrowIfNull(nameof(keyFromEnviroment));
+
+            var key = Encoding.UTF8.GetBytes(keyFromEnviroment!);
+            var secret = new SymmetricSecurityKey(key);
+
+            return new SigningCredentials(secret, SecurityAlgorithms.HmacSha256);
         }
 
         public async Task<IdentityResult> RegisterUserAsync(EmployeeForCreationDto creationDto, string role)
@@ -40,6 +101,20 @@ namespace Companies.API.Services
 
             return result;
 
+        }
+
+        public async Task<bool> ValidateUserAsync(UserForAuthenticationDto userDto)
+        {
+            if (userDto is null)
+            {
+                throw new ArgumentNullException(nameof(userDto));
+            }
+
+            user = await userManager.FindByNameAsync(userDto.UserName!);
+
+            var result = (user != null && await userManager.CheckPasswordAsync(user, userDto.Password!));
+
+            return result;
         }
     }
 }

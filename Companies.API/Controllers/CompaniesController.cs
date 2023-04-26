@@ -10,7 +10,7 @@ namespace Companies.API.Controllers
 {
     [Route("api/companies")]
     [ApiController]
-    [Authorize]
+    [Authorize(Roles ="Admin")]
     public class CompaniesController : ControllerBase
     {
         private readonly ApplicationDbContext _context;

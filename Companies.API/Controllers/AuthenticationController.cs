@@ -30,6 +30,20 @@ namespace Companies.API.Controllers
             var result = await autheniticationService.RegisterUserAsync(employeeForCreationDto, "Admin");
             return result.Succeeded ? StatusCode(StatusCodes.Status201Created) : BadRequest(result.Errors);
 
+        } 
+        
+        [HttpPost("login")]
+        public async Task<IActionResult> Authenticate(UserForAuthenticationDto userDto)
+        {
+            if (!await autheniticationService.ValidateUserAsync(userDto))
+                return Unauthorized();
+
+            return Ok(new
+            {
+                Token = await autheniticationService.CreateTokenAsync()
+            });
         }
+
+
     }
 }
