@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Companies.API.Services
 {
-    public class AuthenticationService
+    public class AuthenticationService : IAuthenticationService
     {
         private readonly IMapper mapper;
         private readonly UserManager<User> userManager;

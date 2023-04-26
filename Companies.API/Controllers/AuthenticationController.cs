@@ -12,13 +12,13 @@ namespace Companies.API.Controllers
     [ApiController]
     public class AuthenticationController : ControllerBase
     {
-        private readonly AuthenticationService autheniticationService;
+        private readonly IAuthenticationService autheniticationService;
         private readonly IMapper mapper;
         private readonly UserManager<User> userManager;
 
-        public AuthenticationController(IMapper mapper, UserManager<User> userManager)
+        public AuthenticationController(IMapper mapper, UserManager<User> userManager, IAuthenticationService authenticationService)
         {
-            autheniticationService = new AuthenticationService(mapper, userManager);
+            autheniticationService = authenticationService;
             this.mapper = mapper;
             this.userManager = userManager;
         }
@@ -28,7 +28,7 @@ namespace Companies.API.Controllers
         {
 
             var result = await autheniticationService.RegisterUserAsync(employeeForCreationDto, "Admin");
-            return BadRequest(result.Errors);
+            return result.Succeeded ? StatusCode(StatusCodes.Status201Created) : BadRequest(result.Errors);
 
         }
     }

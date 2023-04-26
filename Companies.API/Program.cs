@@ -2,6 +2,7 @@
 using Companies.API.Data;
 using Companies.API.Extensions;
 using Companies.API.Middleware;
+using Companies.API.Services;
 using Companies.Core.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -45,6 +46,13 @@ namespace Companies.API
             builder.Services.AddSwaggerGen();
             builder.Services.AddCorsPolicy();
             builder.Services.AddAutoMapper(typeof(MapperProfile));
+
+            //builder.Services.AddScoped      - The request share the same instance (Creates new instance for each request)
+            //builder.Services.AddTransient   - Creates a new instance each time the application needs it (possible multiple instanses in the same request)
+            //builder.Services.AddSingleton   - All request shares same instance
+
+            builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
+
 
             var app = builder.Build();
             await app.SeedDataAsync();
