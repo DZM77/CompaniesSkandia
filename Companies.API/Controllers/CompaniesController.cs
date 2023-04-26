@@ -2,6 +2,7 @@
 using Companies.API.Data;
 using Companies.API.DataTransferObjects;
 using Companies.Core.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,6 +10,7 @@ namespace Companies.API.Controllers
 {
     [Route("api/companies")]
     [ApiController]
+    [Authorize]
     public class CompaniesController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
