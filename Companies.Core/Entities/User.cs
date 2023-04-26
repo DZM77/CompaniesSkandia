@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Companies.Core.Entities
 {
-    public class Employee : IdentityUser
+    public class User : IdentityUser
     {
       //  public Guid Id { get; set; }
 

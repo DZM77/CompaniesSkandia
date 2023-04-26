@@ -35,6 +35,7 @@ namespace Companies.API
                 options.Password.RequiredLength = 3;
                 options.User.RequireUniqueEmail = true;
             })
+                            .AddRoles<IdentityRole>()
                             .AddEntityFrameworkStores<ApplicationDbContext>()
                             .AddDefaultTokenProviders();
 
@@ -62,6 +63,7 @@ namespace Companies.API
 
             app.UseHttpsRedirection();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseDemo();

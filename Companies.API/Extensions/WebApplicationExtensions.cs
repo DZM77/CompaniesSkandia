@@ -11,13 +11,14 @@ namespace Companies.API.Extensions
             {
                 var serviceProvider = scope.ServiceProvider;
                 var db = serviceProvider.GetRequiredService<ApplicationDbContext>();
+                ArgumentNullException.ThrowIfNull(nameof(db));
 
-                //db.Database.EnsureDeleted();
-                //db.Database.Migrate();
+                db.Database.EnsureDeleted();
+                db.Database.Migrate();
 
                 try
                 {
-                    await SeedData.InitAsync(db);
+                    await SeedData.InitAsync(db, serviceProvider);
                 }
                 catch (Exception e)
                 {

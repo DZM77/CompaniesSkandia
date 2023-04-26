@@ -8,7 +8,7 @@ namespace Companies.API.Data
     {
 
        public DbSet<Company> Companies => Set<Company>();
-       public DbSet<User> Employees => Set<User>();
+      // public DbSet<User> Employees => Set<User>();
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
            : base(options)

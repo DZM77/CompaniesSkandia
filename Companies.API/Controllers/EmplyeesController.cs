@@ -35,8 +35,8 @@ namespace Companies.API.Controllers
             if (company is null) return NotFound();
 
             var employees = string.IsNullOrWhiteSpace(parameters.SearchByName) ?
-              context.Employees.Where(e => e.CompanyId.Equals(companyId)) :
-              context.Employees.Where(e => e.CompanyId.Equals(companyId)).Where(e => e.Name!.StartsWith(parameters.SearchByName));
+              context.Users.Where(e => e.CompanyId.Equals(companyId)) :
+              context.Users.Where(e => e.CompanyId.Equals(companyId)).Where(e => e.Name!.StartsWith(parameters.SearchByName));
 
             var pagedResult = await PagedList<User>.CreateAsync(employees, parameters.PageNumber, parameters.PageSize);
 
@@ -62,7 +62,7 @@ namespace Companies.API.Controllers
 
             if (company is null) return NotFound();
 
-            var employee = await context.Employees.FirstOrDefaultAsync(e => e.CompanyId.Equals(companyId));
+            var employee = await context.Users.FirstOrDefaultAsync(e => e.CompanyId.Equals(companyId));
 
             if (employee is null) return NotFound();
 
@@ -86,7 +86,7 @@ namespace Companies.API.Controllers
 
             if (company is null) return NotFound();
 
-            var employeeToPatch = await context.Employees.FirstOrDefaultAsync(e => e.Id.Equals(id));
+            var employeeToPatch = await context.Users.FirstOrDefaultAsync(e => e.Id.Equals(id));
 
             var dto = mapper.Map<EmployeeForUpdateDto>(employeeToPatch);
 
