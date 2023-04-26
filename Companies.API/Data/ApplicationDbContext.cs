@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Companies.API.Data
 {
-    public class ApplicationDbContext : IdentityDbContext<Employee>
+    public class ApplicationDbContext : IdentityDbContext<User>
     {
 
        public DbSet<Company> Companies => Set<Company>();
-       public DbSet<Employee> Employees => Set<Employee>();
+       public DbSet<User> Employees => Set<User>();
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
            : base(options)

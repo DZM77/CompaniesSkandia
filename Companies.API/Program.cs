@@ -26,7 +26,7 @@ namespace Companies.API
 
 
             builder.Services.AddAuthentication();
-            builder.Services.AddIdentityCore<Employee>(options =>
+            builder.Services.AddIdentityCore<User>(options =>
             {
                 options.Password.RequireDigit = false;
                 options.Password.RequireNonAlphanumeric = false;

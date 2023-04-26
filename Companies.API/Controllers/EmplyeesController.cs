@@ -38,7 +38,7 @@ namespace Companies.API.Controllers
               context.Employees.Where(e => e.CompanyId.Equals(companyId)) :
               context.Employees.Where(e => e.CompanyId.Equals(companyId)).Where(e => e.Name!.StartsWith(parameters.SearchByName));
 
-            var pagedResult = await PagedList<Employee>.CreateAsync(employees, parameters.PageNumber, parameters.PageSize);
+            var pagedResult = await PagedList<User>.CreateAsync(employees, parameters.PageNumber, parameters.PageSize);
 
             var employeeDtos = mapper.Map<IEnumerable<EmployeeDto>>(pagedResult);
 
