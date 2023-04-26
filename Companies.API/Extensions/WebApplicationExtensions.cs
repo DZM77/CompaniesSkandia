@@ -13,8 +13,8 @@ namespace Companies.API.Extensions
                 var db = serviceProvider.GetRequiredService<ApplicationDbContext>();
                 ArgumentNullException.ThrowIfNull(nameof(db));
 
-                db.Database.EnsureDeleted();
-                db.Database.Migrate();
+                //db.Database.EnsureDeleted();
+                //db.Database.Migrate();
 
                 try
                 {

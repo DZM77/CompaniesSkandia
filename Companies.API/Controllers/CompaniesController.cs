@@ -102,7 +102,8 @@ namespace Companies.API.Controllers
                 return BadRequest();
             }
           
-            var createdCompany = mapper.Map<Company>(company);  
+            var createdCompany = mapper.Map<Company>(company);
+            //ToDo Register Employyes as Users with Role Employees
 
             _context.Companies.Add(createdCompany);
             await _context.SaveChangesAsync();
