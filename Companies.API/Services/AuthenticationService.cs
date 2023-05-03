@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using Companies.API.Configuration;
 using Companies.API.DataTransferObjects;
 using Companies.Core.Entities;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.Configuration;
 using System.IdentityModel.Tokens.Jwt;
@@ -16,13 +18,15 @@ namespace Companies.API.Services
         private readonly IMapper mapper;
         private readonly UserManager<User> userManager;
         private readonly IConfiguration configuration;
+        private readonly JwtConfigurations jwtConfigurations;
         private User? user;
 
-        public AuthenticationService(IMapper mapper, UserManager<User> userManager, IConfiguration configuration)
+        public AuthenticationService(IMapper mapper, UserManager<User> userManager, IConfiguration configuration, IOptions<JwtConfigurations> options)
         {
             this.mapper = mapper;
             this.userManager = userManager;
             this.configuration = configuration;
+            this.jwtConfigurations = options.Value;
         }
 
         public async Task<TokenDto> CreateTokenAsync(bool expTime)
@@ -54,13 +58,13 @@ namespace Companies.API.Services
 
         private JwtSecurityToken GenerateTokenOptions(SigningCredentials signingCredentials, List<Claim> claims)
         {
-            var jwtSettings = configuration.GetSection("JwtSettings");
+            //var jwtSettings = configuration.GetSection("JwtSettings");
 
             var tokenOptions = new JwtSecurityToken(
-                                        issuer: jwtSettings["validIssuer"],
-                                        audience: jwtSettings["validAudience"],
+                                        issuer: jwtConfigurations.ValidIssuer,
+                                        audience: jwtConfigurations.ValidAudience,
                                         claims: claims,
-                                        expires: DateTime.Now.AddMinutes(Convert.ToDouble(jwtSettings["expires"])),
+                                        expires: DateTime.Now.AddMinutes(Convert.ToDouble(jwtConfigurations.Expires)),
                                         signingCredentials: signingCredentials);
 
             return tokenOptions;

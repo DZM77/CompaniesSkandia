@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Companies.API.Configuration;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
@@ -20,8 +21,14 @@ public static class ServiceExtensions
 
     public static void ConfigureJWT(this IServiceCollection services, IConfiguration configuration)
     {
-        var jwtSettings = configuration.GetSection("JwtSettings");
+        //var jwtSettings = configuration.GetSection("JwtSettings");
         //setx SECRET "CompaniesSecretKey" /M    CMD as Admin
+
+        var jwtConfiguration = new JwtConfigurations();
+        configuration.Bind(JwtConfigurations.Section, jwtConfiguration);
+
+        services.Configure<JwtConfigurations>(configuration.GetSection(JwtConfigurations.Section).Bind);
+
         var secretKey = Environment.GetEnvironmentVariable("SECRET");
         ArgumentNullException.ThrowIfNull(nameof(secretKey));
 
@@ -38,8 +45,8 @@ public static class ServiceExtensions
                    ValidateAudience = true,
                    ValidateLifetime = true,
                    ValidateIssuerSigningKey = true,
-                   ValidIssuer = jwtSettings["validIssuer"],
-                   ValidAudience = jwtSettings["validAudience"],
+                   ValidIssuer = jwtConfiguration.ValidIssuer,
+                   ValidAudience = jwtConfiguration.ValidAudience,
                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey!))
                };
            });
