@@ -1,4 +1,7 @@
-﻿namespace MoqConsole;
+﻿using System.Runtime.CompilerServices;
+
+[assembly: InternalsVisibleTo("Employees.Tests")]
+namespace MoqConsole;
 
 public class Calculator
 {
@@ -12,7 +15,7 @@ public class Calculator
     }
 }
 
-internal class EmployeeService
+public class EmployeeService
 {
     private readonly IValidator validator;
 
@@ -23,6 +26,7 @@ internal class EmployeeService
 
     public bool RegisterUser(Employee employee)
     {
+        var salaryLevel = validator.ValidateSalaryLevel(employee);
         return validator.ValidateName(employee);
 
     }
