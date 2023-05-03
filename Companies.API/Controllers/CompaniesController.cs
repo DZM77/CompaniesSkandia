@@ -12,6 +12,7 @@ namespace Companies.API.Controllers
     [Route("api/companies")]
     [ApiController]
     //[Authorize(Roles ="Admin")]
+   // [Authorize(Policy ="Test")]
     public class CompaniesController : ControllerBase
     {
         private readonly ApplicationDbContext _context;

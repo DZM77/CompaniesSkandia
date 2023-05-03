@@ -4,8 +4,11 @@ using Companies.API.Extensions;
 using Companies.API.Middleware;
 using Companies.API.Services;
 using Companies.Core.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace Companies.API
 {
@@ -21,9 +24,31 @@ namespace Companies.API
                options.UseSqlServer(builder.Configuration.GetConnectionString("ApplicationDbContext") ?? throw new InvalidOperationException("Connection string 'ApplicationDbContext' not found.")));
 
 
-            builder.Services.AddControllers(configure => configure.ReturnHttpNotAcceptable = true)
+            builder.Services.AddControllers(configure =>
+            {
+                     configure.ReturnHttpNotAcceptable = true; 
+
+                     var policy = new AuthorizationPolicyBuilder()
+                                           .RequireClaim(ClaimTypes.NameIdentifier)
+                                           .RequireRole("Admin")
+                                           .Build();
+
+                     configure.Filters.Add(new AuthorizeFilter(policy));
+
+            })
                             .AddNewtonsoftJson()
                             .AddXmlDataContractSerializerFormatters();
+
+            
+            //builder.Services.AddAuthorization(opt =>
+            //{
+            //    opt.AddPolicy("Test", policy =>
+            //    {
+            //        policy.RequireAuthenticatedUser();
+            //        policy.RequireRole("Admin");
+            //        //  policy.RequireRole("Employee");
+            //    });
+            //});
 
 
             builder.Services.AddAuthentication();

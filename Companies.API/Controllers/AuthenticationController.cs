@@ -2,6 +2,7 @@
 using Companies.API.DataTransferObjects;
 using Companies.API.Services;
 using Companies.Core.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -33,6 +34,7 @@ namespace Companies.API.Controllers
         } 
         
         [HttpPost("login")]
+        [AllowAnonymous]
         public async Task<IActionResult> Authenticate(UserForAuthenticationDto userDto)
         {
             if (!await autheniticationService.ValidateUserAsync(userDto))
