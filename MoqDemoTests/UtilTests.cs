@@ -6,7 +6,7 @@ namespace MoqDemoTests
 {
     public class UtilTests
     {
-        
+
         [Fact]
         public void AskForString_ShouldReturnString_WithCustomMoq()
         {
@@ -34,4 +34,5 @@ namespace MoqDemoTests
             Assert.Equal(expected, actual);
 
         }
+    }
 }
