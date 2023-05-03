@@ -1,5 +1,6 @@
 using Moq;
 using MoqConsole;
+using static MoqConsole.EmployeeService;
 
 namespace Employees.Tests
 {
@@ -26,6 +27,27 @@ namespace Employees.Tests
 
             Assert.False(actual);
 
+        }
+
+        [Fact]
+        public void HandleMessageR_ShouldReturnTrueIFMatch()
+        {
+            //var iMessageMock = new Mock<IMessage>();
+            //iMessageMock.Setup(x => x.Message).Returns("Text");
+
+            //var iHandlerMock = new Mock<IHandler>();
+            //iHandlerMock.Setup(x => x.CheckMessage).Returns(iMessageMock.Object);
+
+            //var mockValidator = new Mock<IValidator>();
+            //mockValidator.Setup(x => x.Handler).Returns(iHandlerMock.Object);
+
+            var mockValidator = new Mock<IValidator>();
+            mockValidator.Setup(x => x.Handler.CheckMessage.Message).Returns("Text");
+
+            var sut = new EmployeeService(mockValidator.Object);
+            var actual = sut.HandleMessage("Text");
+
+            Assert.True(actual);
         }
     }
 }

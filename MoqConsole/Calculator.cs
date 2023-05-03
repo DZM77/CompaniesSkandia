@@ -30,40 +30,64 @@ public class EmployeeService
         return validator.ValidateName(employee);
 
     }
-}
 
-public class EmployeeValidator : IValidator
-{
-    public bool ValidateName(Employee employee)
+    public bool HandleMessage(string text)
     {
-        //Not used in tests
-        throw new NotImplementedException();
+        if (validator.Handler.CheckMessage.Message != text)
+        {
+            return false;
+        }
+
+        return true;
     }
 
-    public SalaryLevel ValidateSalaryLevel(Employee employee)
+    public interface IMessage
     {
-        //Not used in tests
-        throw new NotImplementedException();
+        string Message { get; }
     }
-}
 
-public interface IValidator
-{
-    SalaryLevel ValidateSalaryLevel(Employee employee);
-    bool ValidateName(Employee employee);
-}
+    public interface IHandler
+    {
+        IMessage CheckMessage { get; }
+    }
 
-public enum SalaryLevel
-{
-    Default,
-    NotSet,
-    Junior,
-    Senior
-}
+    public class EmployeeValidator : IValidator
+    {
+        public IHandler Handler { get; }
 
-public class Employee
-{
-    public string Name { get; set; } = string.Empty;
-    public int Salary { get; set; }
-    public SalaryLevel SalaryLevel { get; set; } = SalaryLevel.NotSet;
+        public bool ValidateName(Employee employee)
+        {
+            //Not used in tests
+            throw new NotImplementedException();
+        }
+
+        public SalaryLevel ValidateSalaryLevel(Employee employee)
+        {
+            //Not used in tests
+            throw new NotImplementedException();
+        }
+    }
+
+    public interface IValidator
+    {
+        SalaryLevel ValidateSalaryLevel(Employee employee);
+        bool ValidateName(Employee employee);
+
+        IHandler Handler { get; }
+    }
+
+    public enum SalaryLevel
+    {
+        Default,
+        NotSet,
+        Junior,
+        Senior
+    }
+
+    public class Employee
+    {
+        public string Name { get; set; } = string.Empty;
+        public int Salary { get; set; }
+        public SalaryLevel SalaryLevel { get; set; } = SalaryLevel.NotSet;
+    }
 }
