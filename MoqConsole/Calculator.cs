@@ -55,6 +55,11 @@ public class EmployeeService
     {
         public IHandler Handler { get; }
 
+        public void Validate(string name)
+        {
+            throw new NotImplementedException();
+        }
+
         public bool ValidateName(Employee employee)
         {
             //Not used in tests
@@ -72,6 +77,7 @@ public class EmployeeService
     {
         SalaryLevel ValidateSalaryLevel(Employee employee);
         bool ValidateName(Employee employee);
+        void Validate(string name);
 
         IHandler Handler { get; }
     }

@@ -20,6 +20,7 @@ namespace Employees.Tests
             };
 
             mockValidator.Setup(x => x.ValidateName(employee)).Returns(false);
+            mockValidator.Setup(x => x.Validate(It.Is<string>(x => x.StartsWith("K"))));
             mockValidator.Setup(x => x.ValidateSalaryLevel(employee)).Returns(validatedSalaryLevel);
 
             var sut = new EmployeeService(mockValidator.Object);
@@ -30,7 +31,7 @@ namespace Employees.Tests
         }
 
         [Fact]
-        public void HandleMessageR_ShouldReturnTrueIFMatch()
+        public void HandleMessage_ShouldReturnTrueIFMatch()
         {
             //var iMessageMock = new Mock<IMessage>();
             //iMessageMock.Setup(x => x.Message).Returns("Text");
