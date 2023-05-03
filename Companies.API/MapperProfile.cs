@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 
 using Companies.API.DataTransferObjects;
-using Companies.Core.Entities;
+using Companies.API.Entities;
 
 namespace Companies.API
 {

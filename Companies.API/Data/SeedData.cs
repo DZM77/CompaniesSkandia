@@ -1,5 +1,5 @@
 ﻿using Bogus;
-using Companies.Core.Entities;
+using Companies.API.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Data;

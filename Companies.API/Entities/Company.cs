@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Companies.Core.Entities
+namespace Companies.API.Entities
 {
 #nullable disable
     public class Company
@@ -14,12 +14,12 @@ namespace Companies.Core.Entities
 
         [Required(ErrorMessage = "Company name is a required field.")]
         [MaxLength(60, ErrorMessage = "Maximum length for the Name is 60 characters.")]
-        public string? Name { get; set; }
+        public string Name { get; set; }
 
         [Required(ErrorMessage = "Company address is a required field.")]
         [MaxLength(60, ErrorMessage = "Maximum length for the Address is 60 characters")]
         public string Address { get; set; }
-        public string? Country { get; set; }
+        public string Country { get; set; }
         public ICollection<User> Employees { get; set; } = new List<User>();
     }
 }

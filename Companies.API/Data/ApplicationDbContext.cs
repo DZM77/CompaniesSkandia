@@ -1,4 +1,4 @@
-﻿using Companies.Core.Entities;
+﻿using Companies.API.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 

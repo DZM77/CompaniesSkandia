@@ -1,9 +1,9 @@
 
 using Companies.API.Data;
+using Companies.API.Entities;
 using Companies.API.Extensions;
 using Companies.API.Middleware;
 using Companies.API.Services;
-using Companies.Core.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Authorization;

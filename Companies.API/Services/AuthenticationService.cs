@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Companies.API.Configuration;
 using Companies.API.DataTransferObjects;
-using Companies.Core.Entities;
+using Companies.API.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;

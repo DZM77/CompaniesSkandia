@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Companies.API.Data;
 using Companies.API.DataTransferObjects;
-using Companies.Core.Entities;
+using Companies.API.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;

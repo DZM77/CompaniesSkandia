@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using Companies.API.Data;
 using Companies.API.DataTransferObjects;
+using Companies.API.Entities;
 using Companies.API.Paging;
-using Companies.Core.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
