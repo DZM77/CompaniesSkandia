@@ -34,5 +34,20 @@ namespace MoqDemoTests
             Assert.Equal(expected, actual);
 
         }
+        
+        [Fact]
+        public void AskForString_ShouldReturnString_WithMoqLinq()
+        {
+            const string expected = "Input";
+
+            //var mockUI = new Mock<IUI>();
+            //mockUI.Setup(x => x.GetInput()).Returns(expected);
+            var mockUI = Mock.Of<IUI>(x => x.GetInput() == expected);
+
+            var actual = Util.AskForString("", mockUI);
+
+            Assert.Equal(expected, actual);
+
+        }
     }
 }
