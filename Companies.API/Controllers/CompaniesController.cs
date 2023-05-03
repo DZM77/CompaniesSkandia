@@ -3,6 +3,7 @@ using Companies.API.Data;
 using Companies.API.DataTransferObjects;
 using Companies.Core.Entities;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,35 +11,42 @@ namespace Companies.API.Controllers
 {
     [Route("api/companies")]
     [ApiController]
-    [Authorize(Roles ="Admin")]
+    //[Authorize(Roles ="Admin")]
     public class CompaniesController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
         private readonly IMapper mapper;
+        private readonly UserManager<User> userManager;
 
-        public CompaniesController(ApplicationDbContext context, IMapper mapper)
+        public CompaniesController(ApplicationDbContext context, IMapper mapper, UserManager<User> userManager)
         {
             _context = context;
             this.mapper = mapper;
+            this.userManager = userManager;
         }
 
        
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CompanyDto>>> GetCompany(bool includeEmployees = false)
         {
-            //IQueryable<Company> companies = _context.Companies;
-            //var companyDtos = companies.Select(c => new CompanyDto
-            //{
-            //    Name = c.Name,
-            //    Address = c.Address,
-            //    Id = c.Id,
-            //    Country = c.Country
-            //});
+            var user = await userManager.GetUserAsync(User);
+            var user2 = await userManager.FindByIdAsync(user.Id);
+            var user3 = await userManager.FindByNameAsync(user.UserName);
+            var isInRole = await userManager.IsInRoleAsync(user, "Admin");
 
-            //Dont work
-            //var dto = includeEmployees ?  mapper.ProjectTo<CompanyDto>(_context.Companies.Include(c => c.Employees))
-            //                           :  mapper.ProjectTo<CompanyDto>(_context.Companies);
-            //                           
+            if (User.IsInRole("Admin"))
+            {
+                //Do something
+            }
+
+            if (User.Identity.IsAuthenticated)
+            {
+                return Ok("User is authenticated");
+            }
+            else
+                return Ok("User is not authenticated");
+
+
 
             var dtos = includeEmployees ? mapper.Map<IEnumerable<CompanyDto>>(await _context.Companies.Include(c => c.Employees).ToListAsync())
                                      : mapper.Map<IEnumerable<CompanyDto>>(await _context.Companies.ToListAsync());

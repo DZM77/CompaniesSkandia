@@ -53,7 +53,8 @@ namespace Companies.API.Services
             var claims = new List<Claim>
                              {
                                   new Claim(ClaimTypes.Name, user?.UserName!),
-                                  new Claim("Age", user!.Age.ToString()!)
+                                  new Claim("Age", user!.Age.ToString()!),
+                                  new Claim(ClaimTypes.NameIdentifier, user.Id)
                              };
 
             var roles = await userManager.GetRolesAsync(user!);
