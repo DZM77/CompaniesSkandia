@@ -25,6 +25,7 @@ namespace Companies.API.Controllers
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> RegisterUser(EmployeeForCreationDto employeeForCreationDto)
         {
 
@@ -35,15 +36,16 @@ namespace Companies.API.Controllers
         
         [HttpPost("login")]
         [AllowAnonymous]
-        public async Task<IActionResult> Authenticate(UserForAuthenticationDto userDto)
+        public async Task<ActionResult<TokenDto>> Authenticate(UserForAuthenticationDto userDto)
         {
             if (!await autheniticationService.ValidateUserAsync(userDto))
                 return Unauthorized();
 
-            return Ok(new
-            {
-                Token = await autheniticationService.CreateTokenAsync()
-            });
+
+            var tokenDto = await autheniticationService.CreateTokenAsync(expTime: true);
+            
+            return Ok(tokenDto);
+         
         }
 
 

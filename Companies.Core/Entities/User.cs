@@ -24,5 +24,7 @@ namespace Companies.Core.Entities
         public string Position { get; set; } = string.Empty;
         public Guid? CompanyId { get; set; }
         public Company Company { get; set; } = default!;
+        public string? RefreshToken { get; set; }
+        public DateTime RefreshTokenExpireTime { get; set; }
     }
 }

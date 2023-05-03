@@ -5,7 +5,7 @@ namespace Companies.API.Services
 {
     public interface IAuthenticationService
     {
-        Task<string> CreateTokenAsync();
+        Task<TokenDto> CreateTokenAsync(bool expTime);
         Task<IdentityResult> RegisterUserAsync(EmployeeForCreationDto creationDto, string role);
         Task<bool> ValidateUserAsync(UserForAuthenticationDto userDto);
     }

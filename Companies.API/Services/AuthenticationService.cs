@@ -6,6 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Configuration;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace Companies.API.Services
@@ -24,12 +25,31 @@ namespace Companies.API.Services
             this.configuration = configuration;
         }
 
-        public async Task<string> CreateTokenAsync()
+        public async Task<TokenDto> CreateTokenAsync(bool expTime)
         {
             var signingCredentials = GetSigningCredentials();
             var claims = await GetClaimsAsync();
             var tokenOptions = GenerateTokenOptions(signingCredentials, claims);
-            return new JwtSecurityTokenHandler().WriteToken(tokenOptions);
+
+            user.RefreshToken = GenerateRefreshToken();
+
+            if(expTime)
+                user.RefreshTokenExpireTime = DateTime.UtcNow.AddDays(1);
+
+            //ToDo: Validate res!
+            await userManager.UpdateAsync(user);
+
+            var accessToken = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
+
+            return new TokenDto(accessToken, user.RefreshToken);
+        }
+
+        private string GenerateRefreshToken()
+        {
+            var randomNumber = new byte[32];
+            using var rng = RandomNumberGenerator.Create();
+            rng.GetBytes(randomNumber);
+            return Convert.ToBase64String(randomNumber);
         }
 
         private JwtSecurityToken GenerateTokenOptions(SigningCredentials signingCredentials, List<Claim> claims)
