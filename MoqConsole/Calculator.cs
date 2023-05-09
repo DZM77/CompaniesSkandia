@@ -27,7 +27,7 @@ public class EmployeeService
     public bool RegisterUser(Employee employee)
     {
         var salaryLevel = validator.ValidateSalaryLevel(employee);
-        return validator.ValidateName(employee);
+        return validator.ValidateName(employee.Name);
 
     }
 
@@ -60,7 +60,7 @@ public class EmployeeService
             throw new NotImplementedException();
         }
 
-        public bool ValidateName(Employee employee)
+        public bool ValidateName(string name)
         {
             //Not used in tests
             throw new NotImplementedException();
@@ -76,7 +76,7 @@ public class EmployeeService
     public interface IValidator
     {
         SalaryLevel ValidateSalaryLevel(Employee employee);
-        bool ValidateName(Employee employee);
+        bool ValidateName(string name);
         void Validate(string name);
 
         IHandler Handler { get; }

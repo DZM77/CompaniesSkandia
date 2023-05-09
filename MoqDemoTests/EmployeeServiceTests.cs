@@ -2,7 +2,7 @@ using Moq;
 using MoqConsole;
 using static MoqConsole.EmployeeService;
 
-namespace Employees.Tests
+namespace MoqDemoTests
 {
     public class EmployeeServiceTests
     {
@@ -19,7 +19,7 @@ namespace Employees.Tests
                 Name = incorrectName,
             };
 
-            mockValidator.Setup(x => x.ValidateName(employee)).Returns(false);
+            mockValidator.Setup(x => x.ValidateName(employee.Name)).Returns(false);
             mockValidator.Setup(x => x.Validate(It.Is<string>(x => x.StartsWith("K"))));
             mockValidator.Setup(x => x.ValidateSalaryLevel(employee)).Returns(validatedSalaryLevel);
 
