@@ -24,6 +24,17 @@ public class EmployeeService
         this.validator = validator;
     }
 
+    public bool ExceptionDemo(string name)
+    {
+        ArgumentNullException.ThrowIfNull(name);
+
+        if (name is "Kalle") throw new ArgumentException();
+
+        return validator.ValidateName(name);
+    }
+
+
+
     public bool RegisterUser(Employee employee)
     {
         var isValidName = validator.ValidateName(employee.Name);

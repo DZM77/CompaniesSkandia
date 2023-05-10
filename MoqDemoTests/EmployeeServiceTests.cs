@@ -117,5 +117,33 @@ namespace MoqDemoTests
             Assert.True(res);   
 
         }
+
+        [Fact]
+        public void ExceptionDemo_WhenNameIsNull_ShouldThrowArgumentNullException()
+        {
+
+           // var mockValidator = new Mock<IValidator>();
+
+            var sut = new EmployeeService(Mock.Of<IValidator>());
+
+
+            Assert.Throws<ArgumentNullException>(() => sut.ExceptionDemo(null));
+
+        }
+
+        [Fact]
+        public void ExceptionDemo_WhenNameIsKalle_ShouldThrowArgumentException()
+        {
+
+            var mockValidator = new Mock<IValidator>();
+           // mockValidator.Setup(x => x.ValidateName(It.Is<string>(x => x.Equals("Kalle")))).Throws<ArgumentException>();
+
+
+            var sut = new EmployeeService(mockValidator.Object);
+
+
+            Assert.Throws<ArgumentException>(() => sut.ExceptionDemo("Kalle"));
+
+        }
     }
 }
