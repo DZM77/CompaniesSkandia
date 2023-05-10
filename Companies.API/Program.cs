@@ -3,6 +3,7 @@ using Companies.API.Data;
 using Companies.API.Entities;
 using Companies.API.Extensions;
 using Companies.API.Middleware;
+using Companies.API.Repositories;
 using Companies.API.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -77,6 +78,7 @@ namespace Companies.API
             //builder.Services.AddSingleton   - All request shares same instance
 
             builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
+            builder.Services.AddScoped<ICompanyRepository, CompanyRepository>();
             builder.Services.ConfigureJWT(builder.Configuration);
 
             var app = builder.Build();

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Runtime.CompilerServices;
 
 namespace Companies.API.Controllers
 {
@@ -16,24 +17,25 @@ namespace Companies.API.Controllers
    // [Authorize(Policy ="Test")]
     public class CompaniesController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+      //  private readonly ApplicationDbContext _context;
         private readonly IMapper mapper;
         private readonly UserManager<User> userManager;
-        private readonly CompanyRepository companyRepository;
+        private readonly ICompanyRepository companyRepository;
 
-        public CompaniesController(ApplicationDbContext context, IMapper mapper, UserManager<User> userManager)
+        public CompaniesController(IMapper mapper, UserManager<User> userManager, ICompanyRepository repository)
         {
-            _context = context;
+           // _context = context;
             this.mapper = mapper;
             this.userManager = userManager;
-            companyRepository =new CompanyRepository(context);
+            companyRepository = repository;
         }
 
        
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CompanyDto>>> GetCompany(bool includeEmployees = false)
         {
-            var dtos = await companyRepository.GetCompaniesAsync(includeEmployees);
+            var companies = await companyRepository.GetCompaniesAsync(includeEmployees);
+            var dtos = mapper.Map<IEnumerable<CompanyDto>>(companies);
 
             //return Ok();
             return Ok(dtos);

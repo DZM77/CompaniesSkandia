@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Companies.API.Repositories
 {
-    public class CompanyRepository
+    public class CompanyRepository : ICompanyRepository
     {
         private readonly ApplicationDbContext context;
 
