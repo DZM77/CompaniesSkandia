@@ -20,21 +20,21 @@ namespace Companies.API.Controllers
       //  private readonly ApplicationDbContext _context;
         private readonly IMapper mapper;
         private readonly UserManager<User> userManager;
-        private readonly ICompanyRepository companyRepository;
+        private readonly IUnitOfWork unitOfWork;
 
-        public CompaniesController(IMapper mapper, UserManager<User> userManager, ICompanyRepository repository)
+        public CompaniesController(IMapper mapper, UserManager<User> userManager, IUnitOfWork unitOfWork)
         {
            // _context = context;
             this.mapper = mapper;
             this.userManager = userManager;
-            companyRepository = repository;
+            this.unitOfWork = unitOfWork;
         }
 
        
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CompanyDto>>> GetCompany(bool includeEmployees = false)
         {
-            var companies = await companyRepository.GetCompaniesAsync(includeEmployees);
+            var companies = await unitOfWork.CompanyRepository.GetCompaniesAsync(includeEmployees);
             var dtos = mapper.Map<IEnumerable<CompanyDto>>(companies);
 
             //return Ok();

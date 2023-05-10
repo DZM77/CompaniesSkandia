@@ -78,7 +78,7 @@ namespace Companies.API
             //builder.Services.AddSingleton   - All request shares same instance
 
             builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
-            builder.Services.AddScoped<ICompanyRepository, CompanyRepository>();
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.ConfigureJWT(builder.Configuration);
 
             var app = builder.Build();
