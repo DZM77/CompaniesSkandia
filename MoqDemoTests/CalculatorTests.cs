@@ -22,7 +22,8 @@ namespace MoqDemoTests
 
 
         [Theory]
-        [MemberData(nameof(GetNumbers2))]
+       // [MemberData(nameof(GetNumbers2))]
+        [ClassData(typeof(ClassDataExample))]
         public void Add_ShouldReturnSum2(int nr1, int nr2)
         {
             var sut = new Calculator();
@@ -60,6 +61,17 @@ namespace MoqDemoTests
 
 
     }
+
+    public class ClassDataExample : TheoryData<int, int>
+    {
+        public ClassDataExample()
+        {
+            Add(1, 2);
+            Add(3, 4);
+            Add(4, 5);
+        }
+    }
+
 
     public class UseMemberDataFromAnotherClass
     {
