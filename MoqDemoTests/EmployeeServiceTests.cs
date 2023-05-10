@@ -4,15 +4,21 @@ using static MoqConsole.EmployeeService;
 
 namespace MoqDemoTests
 {
-    public class EmployeeServiceTests
+    public class EmployeeServiceTests : IDisposable
     {
+        private Mock<IValidator> mockValidator;
+
+        public EmployeeServiceTests()
+        {
+            mockValidator = new Mock<IValidator>();
+        }
+
         [Fact]
         public void RegisterUser_ReturnFalse_WhenIncorrectName()
         {
             const string incorrectName = "incorrect";
             const SalaryLevel validatedSalaryLevel = SalaryLevel.Junior;
 
-            var mockValidator = new Mock<IValidator>();
 
             var employee = new Employee()
             {
@@ -42,7 +48,6 @@ namespace MoqDemoTests
             //var mockValidator = new Mock<IValidator>();
             //mockValidator.Setup(x => x.Handler).Returns(iHandlerMock.Object);
 
-            var mockValidator = new Mock<IValidator>();
             mockValidator.Setup(x => x.Handler.CheckMessage.Message).Returns("Text");
 
             var sut = new EmployeeService(mockValidator.Object);
@@ -57,7 +62,6 @@ namespace MoqDemoTests
         {
             
 
-            var mockValidator = new Mock<IValidator>();
             mockValidator.Setup(x => x.Handler.CheckMessage.Message).Returns("Text");
 
             var sut = new EmployeeService(mockValidator.Object);
@@ -70,7 +74,6 @@ namespace MoqDemoTests
         public void HandleMessage_WhenMessageNotMatch_MethodToVerifyItsCalled_ShouldRun_Once()
         {
 
-            var mockValidator = new Mock<IValidator>();
             mockValidator.Setup(x => x.Handler.CheckMessage.Message).Returns("");
 
             var sut = new EmployeeService(mockValidator.Object);
@@ -84,7 +87,6 @@ namespace MoqDemoTests
         public void HandleMessage_WhenMessageMatch_TestProp_ShouldBeCalledOncee()
         {
 
-            var mockValidator = new Mock<IValidator>();
             mockValidator.Setup(x => x.Handler.CheckMessage.Message).Returns("Text");
 
             var sut = new EmployeeService(mockValidator.Object);
@@ -108,7 +110,6 @@ namespace MoqDemoTests
         public void RegisterUser_WhenValidNames_ShouldReturnTrue()
         {
 
-            var mockValidator = new Mock<IValidator>();
             mockValidator.SetupSequence(x => x.ValidateName(It.IsAny<string>())).Returns(true).Returns(false);
 
             var sut = new EmployeeService(mockValidator.Object);
@@ -144,6 +145,11 @@ namespace MoqDemoTests
 
             Assert.Throws<ArgumentException>(() => sut.ExceptionDemo("Kalle"));
 
+        }
+
+        public void Dispose()
+        {
+            //Not used
         }
     }
 }
