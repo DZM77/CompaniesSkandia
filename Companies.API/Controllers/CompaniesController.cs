@@ -15,15 +15,15 @@ namespace Companies.API.Controllers
    // [Authorize(Policy ="Test")]
     public class CompaniesController : ControllerBase
     {
-        //private readonly ApplicationDbContext _context;
-        //private readonly IMapper mapper;
-        //private readonly UserManager<User> userManager;
+        private readonly ApplicationDbContext _context;
+        private readonly IMapper mapper;
+        private readonly UserManager<User> userManager;
 
-        public CompaniesController(/*ApplicationDbContext context, IMapper mapper, UserManager<User> userManager*/)
+        public CompaniesController(ApplicationDbContext context, IMapper mapper, UserManager<User> userManager)
         {
-            //_context = context;
-            //this.mapper = mapper;
-            //this.userManager = userManager;
+            _context = context;
+            this.mapper = mapper;
+            this.userManager = userManager;
         }
 
        
@@ -40,20 +40,20 @@ namespace Companies.API.Controllers
             //    //Do something
             //}
 
-            if (User.Identity.IsAuthenticated)
-            {
-                return Ok();
-            }
-            else
-                return BadRequest("User is not authenticated");
+            //if (User.Identity.IsAuthenticated)
+            //{
+            //    return Ok();
+            //}
+            //else
+            //    return BadRequest("User is not authenticated");
 
 
 
-            //var dtos = includeEmployees ? mapper.Map<IEnumerable<CompanyDto>>(await _context.Companies.Include(c => c.Employees).ToListAsync())
-            //                         : mapper.Map<IEnumerable<CompanyDto>>(await _context.Companies.ToListAsync());
+            var dtos = includeEmployees ? mapper.Map<IEnumerable<CompanyDto>>(await _context.Companies.Include(c => c.Employees).ToListAsync())
+                                     : mapper.Map<IEnumerable<CompanyDto>>(await _context.Companies.ToListAsync());
 
-            return Ok();
-           // return Ok(dtos);
+            //return Ok();
+            return Ok(dtos);
         }
 
         //// GET: api/Companies/5
