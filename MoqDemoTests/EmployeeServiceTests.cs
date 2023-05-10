@@ -12,7 +12,7 @@ namespace MoqDemoTests
             const string incorrectName = "incorrect";
             const SalaryLevel validatedSalaryLevel = SalaryLevel.Junior;
 
-            var mockValidator = new Mock<IValidator>(MockBehavior.Strict);
+            var mockValidator = new Mock<IValidator>();
 
             var employee = new Employee()
             {
@@ -63,7 +63,59 @@ namespace MoqDemoTests
             var sut = new EmployeeService(mockValidator.Object);
             var actual = sut.HandleMessage("Text");
 
-            mockValidator.Verify(x => x.MethodToVerifyItsCalled(), Times.Once());
+            mockValidator.Verify(x => x.MethodToVerifyItsCalled(), Times.Exactly(2));
+        }
+
+        [Fact]
+        public void HandleMessage_WhenMessageNotMatch_MethodToVerifyItsCalled_ShouldRun_Once()
+        {
+
+            var mockValidator = new Mock<IValidator>();
+            mockValidator.Setup(x => x.Handler.CheckMessage.Message).Returns("");
+
+            var sut = new EmployeeService(mockValidator.Object);
+            sut.HandleMessage("Text");
+
+            mockValidator.Verify(x => x.MethodToVerifyItsCalled(), Times.Once);
+
+        }
+        
+        [Fact]
+        public void HandleMessage_WhenMessageMatch_TestProp_ShouldBeCalledOncee()
+        {
+
+            var mockValidator = new Mock<IValidator>();
+            mockValidator.Setup(x => x.Handler.CheckMessage.Message).Returns("Text");
+
+            var sut = new EmployeeService(mockValidator.Object);
+            sut.HandleMessage("Text");
+
+            mockValidator.Verify(x => x.TestProp);
+            mockValidator.VerifyGet(x => x.TestProp);
+
+            mockValidator.VerifySet(x => x.TestProp = It.IsAny<string>());
+            mockValidator.VerifySet(x => x.TestProp = It.Is<string>(s => s.Count() < 10));
+            mockValidator.VerifySet(x => x.TestProp = "Hej");
+
+            mockValidator.VerifyGet(x => x.Handler.CheckMessage.Message);
+            mockValidator.Verify(x => x.MethodToVerifyItsCalled(), Times.AtLeastOnce);
+            mockValidator.VerifyNoOtherCalls();
+
+
+        } 
+        
+        [Fact]
+        public void RegisterUser_WhenValidNames_ShouldReturnTrue()
+        {
+
+            var mockValidator = new Mock<IValidator>();
+            mockValidator.SetupSequence(x => x.ValidateName(It.IsAny<string>())).Returns(true).Returns(false);
+
+            var sut = new EmployeeService(mockValidator.Object);
+            var res = sut.RegisterUser(new Employee { Name = "Test"});
+
+            Assert.True(res);   
+
         }
     }
 }

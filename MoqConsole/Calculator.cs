@@ -26,8 +26,11 @@ public class EmployeeService
 
     public bool RegisterUser(Employee employee)
     {
-        var salaryLevel = validator.ValidateSalaryLevel(employee);
-        return validator.ValidateName(employee.Name);
+        var isValidName = validator.ValidateName(employee.Name);
+        var isKalleValidName = validator.ValidateName("Kalle");
+
+        if (isValidName && !isKalleValidName) return true;
+        else return false;
 
     }
 
@@ -43,6 +46,14 @@ public class EmployeeService
             validator.MethodToVerifyItsCalled();
         }
 
+        string value = validator.TestProp;
+        string value2 = validator.TestProp;
+        string value3 = validator.TestProp;
+
+
+        validator.TestProp = "Hej";
+
+        validator.MethodToVerifyItsCalled();
 
         return res;
     }
@@ -60,6 +71,7 @@ public class EmployeeService
     public class EmployeeValidator : IValidator
     {
         public IHandler Handler { get; }
+        public string TestProp { get; set; }
 
         public void MethodToVerifyItsCalled()
         {
@@ -90,6 +102,7 @@ public class EmployeeService
         bool ValidateName(string name);
         void Validate(string name);
         void MethodToVerifyItsCalled();
+        string TestProp { get; set; }
 
         IHandler Handler { get; }
     }
