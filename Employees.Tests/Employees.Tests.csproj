@@ -23,6 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Companies.API\Companies.API.csproj" />
     <ProjectReference Include="..\MoqConsole\MoqConsole.csproj" />
   </ItemGroup>
 
