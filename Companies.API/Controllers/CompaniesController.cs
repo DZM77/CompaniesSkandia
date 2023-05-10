@@ -40,12 +40,12 @@ namespace Companies.API.Controllers
             //    //Do something
             //}
 
-            //if (User.Identity.IsAuthenticated)
-            //{
-            //    return Ok("User is authenticated");
-            //}
-            //else
-            //    return Ok("User is not authenticated");
+            if (User.Identity.IsAuthenticated)
+            {
+                return Ok("User is authenticated");
+            }
+            else
+                return BadRequest("User is not authenticated");
 
 
 
