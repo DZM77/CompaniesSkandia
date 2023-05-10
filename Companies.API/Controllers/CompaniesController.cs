@@ -2,6 +2,7 @@
 using Companies.API.Data;
 using Companies.API.DataTransferObjects;
 using Companies.API.Entities;
+using Companies.API.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -18,49 +19,33 @@ namespace Companies.API.Controllers
         private readonly ApplicationDbContext _context;
         private readonly IMapper mapper;
         private readonly UserManager<User> userManager;
+        private readonly CompanyRepository companyRepository;
 
         public CompaniesController(ApplicationDbContext context, IMapper mapper, UserManager<User> userManager)
         {
             _context = context;
             this.mapper = mapper;
             this.userManager = userManager;
+            companyRepository =new CompanyRepository(context);
         }
 
        
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CompanyDto>>> GetCompany(bool includeEmployees = false)
         {
-            //var user = await userManager.GetUserAsync(User);
-            //var user2 = await userManager.FindByIdAsync(user.Id);
-            //var user3 = await userManager.FindByNameAsync(user.UserName);
-            //var isInRole = await userManager.IsInRoleAsync(user, "Admin");
-
-            //if (User.IsInRole("Admin"))
-            //{
-            //    //Do something
-            //}
-
-            //if (User.Identity.IsAuthenticated)
-            //{
-            //    return Ok();
-            //}
-            //else
-            //    return BadRequest("User is not authenticated");
-
-
-
-            var dtos = includeEmployees ? mapper.Map<IEnumerable<CompanyDto>>(await _context.Companies.Include(c => c.Employees).ToListAsync())
-                                     : mapper.Map<IEnumerable<CompanyDto>>(await _context.Companies.ToListAsync());
+            var dtos = await companyRepository.GetCompaniesAsync(includeEmployees);
 
             //return Ok();
             return Ok(dtos);
         }
 
+       
+
         //// GET: api/Companies/5
         //[HttpGet("{id}")]
         //public async Task<ActionResult<Company>> GetCompany(Guid id)
         //{
-            
+
         //    var company = await _context.Companies.FindAsync(id);
 
         //    if (company == null)
@@ -82,7 +67,7 @@ namespace Companies.API.Controllers
         //    {
         //        //return new ProblemDetails()
         //        //{
-                     
+
         //        //};
         //        return BadRequest("Guid don't match");
         //    }
@@ -113,7 +98,7 @@ namespace Companies.API.Controllers
         //    {
         //        return BadRequest();
         //    }
-          
+
         //    var createdCompany = mapper.Map<Company>(company);
         //    //ToDo Register Employyes as Users with Role Employees
 
@@ -121,7 +106,7 @@ namespace Companies.API.Controllers
         //    await _context.SaveChangesAsync();
 
         //    var companyToReturn = mapper.Map<CompanyDto>(createdCompany);
-  
+
         //    return CreatedAtAction(nameof(GetCompany), new { id = companyToReturn.Id }, companyToReturn);
         //}
 
@@ -129,7 +114,7 @@ namespace Companies.API.Controllers
         //[HttpDelete("{id}")]
         //public async Task<IActionResult> DeleteCompany(Guid id)
         //{
-           
+
         //    var company = await _context.Companies.FindAsync(id);
         //    if (company == null)
         //    {
