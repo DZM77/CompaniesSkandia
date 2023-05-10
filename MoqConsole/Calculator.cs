@@ -33,12 +33,18 @@ public class EmployeeService
 
     public bool HandleMessage(string text)
     {
+        var res = false;
+
         if (validator.Handler.CheckMessage.Message != text)
+            res = false;
+        else
         {
-            return false;
+            res = true;
+            validator.MethodToVerifyItsCalled();
         }
 
-        return true;
+
+        return res;
     }
 
     public interface IMessage
@@ -54,6 +60,11 @@ public class EmployeeService
     public class EmployeeValidator : IValidator
     {
         public IHandler Handler { get; }
+
+        public void MethodToVerifyItsCalled()
+        {
+            throw new NotImplementedException();
+        }
 
         public void Validate(string name)
         {
@@ -78,6 +89,7 @@ public class EmployeeService
         SalaryLevel ValidateSalaryLevel(Employee employee);
         bool ValidateName(string name);
         void Validate(string name);
+        void MethodToVerifyItsCalled();
 
         IHandler Handler { get; }
     }

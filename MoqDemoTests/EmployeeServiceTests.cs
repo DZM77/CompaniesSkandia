@@ -49,6 +49,21 @@ namespace MoqDemoTests
             var actual = sut.HandleMessage("Text");
 
             Assert.True(actual);
+        } 
+        
+        
+        [Fact]
+        public void HandleMessage_MethodToVerifyItsCalled_ShouldRun_Once()
+        {
+            
+
+            var mockValidator = new Mock<IValidator>();
+            mockValidator.Setup(x => x.Handler.CheckMessage.Message).Returns("Text");
+
+            var sut = new EmployeeService(mockValidator.Object);
+            var actual = sut.HandleMessage("Text");
+
+            mockValidator.Verify(x => x.MethodToVerifyItsCalled(), Times.Once());
         }
     }
 }
