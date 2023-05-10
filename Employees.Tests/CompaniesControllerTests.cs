@@ -1,4 +1,5 @@
 ﻿using Companies.API.Controllers;
+using Employees.Tests.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -17,6 +18,7 @@ namespace Employees.Tests
         public async Task GetCompany_ShouldReturn200OK()
         {
             var sut = new CompaniesController();
+            sut.SetUserIsAuthenticated(true);
 
             var result = await sut.GetCompany();
             var resultType = result.Result as OkResult;
@@ -28,19 +30,9 @@ namespace Employees.Tests
         [Fact]
         public async Task GetCompany_IfNotAuthenticated_ShouldReturn400BadRequest()
         {
-            var mockHttpContext = new Mock<HttpContext>();
-            mockHttpContext.SetupGet(c => c.User.Identity.IsAuthenticated).Returns(false);
-
-            var controllerContext = new ControllerContext
-            {
-                HttpContext = mockHttpContext.Object
-            };
-
-
+           
             var sut = new CompaniesController();
-            sut.ControllerContext= controllerContext; 
-
-
+            sut.SetUserIsAuthenticated(false);
 
             var result = await sut.GetCompany();
             var resultType = result.Result as BadRequestObjectResult;

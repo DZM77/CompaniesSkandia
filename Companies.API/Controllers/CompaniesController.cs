@@ -42,7 +42,7 @@ namespace Companies.API.Controllers
 
             if (User.Identity.IsAuthenticated)
             {
-                return Ok("User is authenticated");
+                return Ok();
             }
             else
                 return BadRequest("User is not authenticated");
