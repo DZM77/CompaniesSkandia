@@ -49,94 +49,92 @@ namespace Companies.API.Controllers
 
 
         //// GET: api/Companies/5
-        //[HttpGet("{id}")]
-        //public async Task<ActionResult<Company>> GetCompany(Guid id)
+        [HttpGet("{id}")]
+        public async Task<ActionResult<CompanyDto>> GetCompany(Guid id)
+        {
+
+            var companyDto = await serviceManager.CompanyService.GetAsync(id);
+
+            if (companyDto == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(companyDto);
+        }
+
+        //// PUT: api/Companies/5
+        //// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        //[HttpPut("{id}")]
+        //public async Task<IActionResult> PutCompany(Guid id, CompanyForUpdateDto dto)
+        //{
+        //    if (id != dto.Id)
+        //    {
+        //        //return new ProblemDetails()
+        //        //{
+
+        //        //};
+        //        return BadRequest("Guid don't match");
+        //    }
+
+        //    // _context.Entry(company).State = EntityState.Modified;
+
+        //    var companyFromDB = await _context.Companies.FirstOrDefaultAsync(c => c.Id.Equals(id));
+
+        //    if (companyFromDB is null)
+        //        return NotFound();
+
+        //    //Add Employees if any new
+        //    mapper.Map(dto, companyFromDB);
+        //    await _context.SaveChangesAsync();
+
+        //    return Ok(mapper.Map<CompanyDto>(companyFromDB)); //For demo purpose
+
+        //    return NoContent();
+        //}
+
+        //// POST: api/Companies
+        //// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        //[HttpPost]
+        //public async Task<ActionResult<Company>> PostCompany(CompanyForCreationDto company)
         //{
 
-        //    var company = await unitOfWork.CompanyRepository.GetAsync(id);
+        //    if (company is null)
+        //    {
+        //        return BadRequest();
+        //    }
 
+        //    var createdCompany = mapper.Map<Company>(company);
+        //    //ToDo Register Employyes as Users with Role Employees
+
+        //    _context.Companies.Add(createdCompany);
+        //    await _context.SaveChangesAsync();
+
+        //    var companyToReturn = mapper.Map<CompanyDto>(createdCompany);
+
+        //    return CreatedAtAction(nameof(GetCompany), new { id = companyToReturn.Id }, companyToReturn);
+        //}
+
+        //// DELETE: api/Companies/5
+        //[HttpDelete("{id}")]
+        //public async Task<IActionResult> DeleteCompany(Guid id)
+        //{
+
+        //    var company = await _context.Companies.FindAsync(id);
         //    if (company == null)
         //    {
         //        return NotFound();
         //    }
 
-        //    var companyDto = mapper.Map<CompanyDto>(company);
+        //    _context.Companies.Remove(company);
+        //    await _context.SaveChangesAsync();
 
-        //    return Ok(companyDto);
-        // }
+        //    return NoContent();
+        //}
 
-            //// PUT: api/Companies/5
-            //// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-            //[HttpPut("{id}")]
-            //public async Task<IActionResult> PutCompany(Guid id, CompanyForUpdateDto dto)
-            //{
-            //    if (id != dto.Id)
-            //    {
-            //        //return new ProblemDetails()
-            //        //{
-
-            //        //};
-            //        return BadRequest("Guid don't match");
-            //    }
-
-            //    // _context.Entry(company).State = EntityState.Modified;
-
-            //    var companyFromDB = await _context.Companies.FirstOrDefaultAsync(c => c.Id.Equals(id));
-
-            //    if (companyFromDB is null)
-            //        return NotFound();
-
-            //    //Add Employees if any new
-            //    mapper.Map(dto, companyFromDB);
-            //    await _context.SaveChangesAsync();
-
-            //    return Ok(mapper.Map<CompanyDto>(companyFromDB)); //For demo purpose
-
-            //    return NoContent();
-            //}
-
-            //// POST: api/Companies
-            //// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-            //[HttpPost]
-            //public async Task<ActionResult<Company>> PostCompany(CompanyForCreationDto company)
-            //{
-
-            //    if (company is null)
-            //    {
-            //        return BadRequest();
-            //    }
-
-            //    var createdCompany = mapper.Map<Company>(company);
-            //    //ToDo Register Employyes as Users with Role Employees
-
-            //    _context.Companies.Add(createdCompany);
-            //    await _context.SaveChangesAsync();
-
-            //    var companyToReturn = mapper.Map<CompanyDto>(createdCompany);
-
-            //    return CreatedAtAction(nameof(GetCompany), new { id = companyToReturn.Id }, companyToReturn);
-            //}
-
-            //// DELETE: api/Companies/5
-            //[HttpDelete("{id}")]
-            //public async Task<IActionResult> DeleteCompany(Guid id)
-            //{
-
-            //    var company = await _context.Companies.FindAsync(id);
-            //    if (company == null)
-            //    {
-            //        return NotFound();
-            //    }
-
-            //    _context.Companies.Remove(company);
-            //    await _context.SaveChangesAsync();
-
-            //    return NoContent();
-            //}
-
-            //private bool CompanyExists(Guid id)
-            //{
-            //    return (_context.Companies?.Any(e => e.Id == id)).GetValueOrDefault();
-            //}
-        }
+        //private bool CompanyExists(Guid id)
+        //{
+        //    return (_context.Companies?.Any(e => e.Id == id)).GetValueOrDefault();
+        //}
+    }
 }

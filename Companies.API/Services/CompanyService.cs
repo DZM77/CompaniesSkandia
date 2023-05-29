@@ -15,6 +15,15 @@ namespace Companies.API.Services
             this.mapper = mapper;
         }
 
+        public async Task<CompanyDto> GetAsync(Guid id)
+        {
+            var company = await unitOfWork.CompanyRepository.GetAsync(id);
+
+            var companyDto = mapper.Map<CompanyDto>(company);
+
+            return companyDto;
+        }
+
         public async Task<IEnumerable<CompanyDto>> GetCompaniesAsync(bool includeEmployees)
         {
             //Maybe some logic here... 
