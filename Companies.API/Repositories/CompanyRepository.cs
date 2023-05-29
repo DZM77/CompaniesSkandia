@@ -15,6 +15,11 @@ namespace Companies.API.Repositories
             this.context = context;
         }
 
+        public async Task<Company?> GetAsync(Guid id)
+        {
+            return await context.Companies.FirstOrDefaultAsync(c => c.Id == id);
+        }
+
         public async Task<IEnumerable<Company>> GetCompaniesAsync(bool includeEmployees)
         {
             return includeEmployees ? await context.Companies.Include(c => c.Employees).ToListAsync()

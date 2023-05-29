@@ -9,6 +9,7 @@ using Employees.Tests.Fixtures;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Controllers;
 using Moq;
 using System;
 using System.Collections.Generic;
@@ -115,6 +116,18 @@ namespace Employees.Tests.Controlers
             var okResult = Assert.IsType<OkObjectResult>(result.Result);
             var items = Assert.IsType<List<CompanyDto>>(okResult.Value);
             Assert.Equal(items.Count, companies.Count);
+
+        }
+
+        [Fact]
+        public async Task GetCompany_WhenNotFound_ShouldReturnNotFound()
+        {
+            var nonExistingGuid = Guid.NewGuid();
+           fixture.MockRepo.Setup(m => m.GetAsync(nonExistingGuid)).ReturnsAsync(() => null);
+
+            var result = await fixture.Controller.GetCompany(nonExistingGuid);
+
+            Assert.IsType<NotFoundResult>(result.Result);
 
         }
 
