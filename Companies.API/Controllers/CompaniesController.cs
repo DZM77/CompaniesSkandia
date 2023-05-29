@@ -39,6 +39,7 @@ namespace Companies.API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CompanyDto>>> GetCompany(bool includeEmployees = false)
         {
+            throw new Exception();
             var dtos = await serviceManager.CompanyService.GetCompaniesAsync(includeEmployees);
            // var dtos = mapper.Map<IEnumerable<CompanyDto>>(companies);
 
