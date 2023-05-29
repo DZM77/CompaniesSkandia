@@ -5,6 +5,7 @@ using Companies.API.DataTransferObjects;
 using Companies.API.Entities;
 using Companies.API.Repositories;
 using Employees.Tests.Extensions;
+using Employees.Tests.Fixtures;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -18,10 +19,11 @@ using System.Threading.Tasks;
 
 namespace Employees.Tests.Controlers
 {
-    public class CompaniesControllerTests
+    public class CompaniesControllerTests : IClassFixture<CompaniesControllerFixture>
     {
-        private Mock<ICompanyRepository> mockRepo;
-        private CompaniesController controller;
+        //private Mock<ICompanyRepository> mockRepo;
+        //private CompaniesController controller;
+        private readonly CompaniesControllerFixture fixture;
         #region old tests with mocked ClaimsPrincipal
         //[Fact]
         //public async Task GetCompany_ShouldReturn200OK()
@@ -73,21 +75,22 @@ namespace Employees.Tests.Controlers
         //}
         #endregion
 
-        public CompaniesControllerTests()
+        public CompaniesControllerTests(CompaniesControllerFixture fixture) 
         {
-            mockRepo = new Mock<ICompanyRepository>();
-            var mockUoW = new Mock<IUnitOfWork>();
-            mockUoW.Setup(u => u.CompanyRepository).Returns(mockRepo.Object);
+            this.fixture = fixture;
+            //mockRepo = new Mock<ICompanyRepository>();
+            //var mockUoW = new Mock<IUnitOfWork>();
+            //mockUoW.Setup(u => u.CompanyRepository).Returns(mockRepo.Object);
 
-            var mapper = new Mapper(new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile<MapperProfile>();
-            }));
+            //var mapper = new Mapper(new MapperConfiguration(cfg =>
+            //{
+            //    cfg.AddProfile<MapperProfile>();
+            //}));
 
-            var mockUserStore = new Mock<IUserStore<User>>();
-            var userManager = new UserManager<User>(mockUserStore.Object, null!, null!, null!, null!, null!, null!, null!, null!);
+            //var mockUserStore = new Mock<IUserStore<User>>();
+            //var userManager = new UserManager<User>(mockUserStore.Object, null!, null!, null!, null!, null!, null!, null!, null!);
 
-            controller = new CompaniesController(mapper, userManager, mockUoW.Object);
+            //controller = new CompaniesController(mapper, userManager, mockUoW.Object);
         }
 
         [Fact]
@@ -95,9 +98,9 @@ namespace Employees.Tests.Controlers
         {
 
             var companies = GetCompanys();
-            mockRepo.Setup(m => m.GetCompaniesAsync(false)).ReturnsAsync(companies);
+            fixture.MockRepo.Setup(m => m.GetCompaniesAsync(false)).ReturnsAsync(companies);
 
-            var result = await controller.GetCompany();
+            var result = await fixture.Controller.GetCompany();
 
             //var resultType = result.Result as OkObjectResult;
 
