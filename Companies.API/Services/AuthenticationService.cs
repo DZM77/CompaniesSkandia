@@ -64,8 +64,8 @@ namespace Companies.API.Services
                                         issuer: jwtConfigurations.ValidIssuer,
                                         audience: jwtConfigurations.ValidAudience,
                                         claims: claims,
-                                        expires: DateTime.Now.AddMinutes(Convert.ToDouble(jwtConfigurations.Expires)),
-                                        signingCredentials: signingCredentials);
+                                        expires: DateTime.Now.AddDays(5),//DateTime.Now.AddMinutes(Convert.ToDouble(jwtConfigurations.Expires)),
+                                        signingCredentials: signingCredentials); 
 
             return tokenOptions;
         }
