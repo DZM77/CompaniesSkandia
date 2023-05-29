@@ -3,6 +3,7 @@ using Companies.API.Data;
 using Companies.API.DataTransferObjects;
 using Companies.API.Entities;
 using Companies.API.Repositories;
+using Companies.API.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -18,24 +19,28 @@ namespace Companies.API.Controllers
     public class CompaniesController : ControllerBase
     {
       //  private readonly ApplicationDbContext _context;
-        private readonly IMapper mapper;
-        private readonly UserManager<User> userManager;
-        private readonly IUnitOfWork unitOfWork;
+        //private readonly IMapper mapper;
+        //private readonly UserManager<User> userManager;
+        //private readonly IUnitOfWork unitOfWork;
+        private readonly IServiceManager serviceManager;
+       // private readonly ICompanyService companyService;
 
-        public CompaniesController(IMapper mapper, UserManager<User> userManager, IUnitOfWork unitOfWork)
+        public CompaniesController(/*IMapper mapper, UserManager<User> userManager, IUnitOfWork unitOfWork, */IServiceManager serviceManager)
         {
            // _context = context;
-            this.mapper = mapper;
-            this.userManager = userManager;
-            this.unitOfWork = unitOfWork;
+            //this.mapper = mapper;
+            //this.userManager = userManager;
+            //this.unitOfWork = unitOfWork;
+            this.serviceManager = serviceManager;
+           // this.companyService = companyService;
         }
 
        
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CompanyDto>>> GetCompany(bool includeEmployees = false)
         {
-            var companies = await unitOfWork.CompanyRepository.GetCompaniesAsync(includeEmployees);
-            var dtos = mapper.Map<IEnumerable<CompanyDto>>(companies);
+            var dtos = await serviceManager.CompanyService.GetCompaniesAsync(includeEmployees);
+           // var dtos = mapper.Map<IEnumerable<CompanyDto>>(companies);
 
             //return Ok();
             return Ok(dtos);
@@ -44,21 +49,21 @@ namespace Companies.API.Controllers
 
 
         //// GET: api/Companies/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Company>> GetCompany(Guid id)
-        {
+        //[HttpGet("{id}")]
+        //public async Task<ActionResult<Company>> GetCompany(Guid id)
+        //{
 
-            var company = await unitOfWork.CompanyRepository.GetAsync(id);
+        //    var company = await unitOfWork.CompanyRepository.GetAsync(id);
 
-            if (company == null)
-            {
-                return NotFound();
-            }
+        //    if (company == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            var companyDto = mapper.Map<CompanyDto>(company);
+        //    var companyDto = mapper.Map<CompanyDto>(company);
 
-            return Ok(companyDto);
-         }
+        //    return Ok(companyDto);
+        // }
 
             //// PUT: api/Companies/5
             //// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
