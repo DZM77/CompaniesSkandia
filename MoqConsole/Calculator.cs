@@ -79,10 +79,11 @@ public class EmployeeService
         IMessage CheckMessage { get; }
     }
 
+    //Not used only for tests
     public class EmployeeValidator : IValidator
     {
-        public IHandler Handler { get; }
-        public string TestProp { get; set; }
+        public IHandler Handler { get; } = default!;
+        public string TestProp { get; set; } = default!;
 
         public void MethodToVerifyItsCalled()
         {
