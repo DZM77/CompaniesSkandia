@@ -28,35 +28,30 @@ namespace Companies.API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<CompanyDto>> GetCompany(Guid id) => 
             Ok(await serviceManager.CompanyService.GetAsync(id));
-        
 
-        //[HttpPut("{id}")]
-        //public async Task<IActionResult> PutCompany(Guid id, CompanyForUpdateDto dto)
-        //{
-        //    if (id != dto.Id)
-        //    {
-        //        //return new ProblemDetails()
-        //        //{
 
-        //        //};
-        //        return BadRequest("Guid don't match");
-        //    }
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutCompany(Guid id, CompanyForUpdateDto dto)
+        {
+            if (id != dto.Id)
+            {
+                return BadRequest("Guid don't match");
+            }
 
-        //    // _context.Entry(company).State = EntityState.Modified;
+            //var companyFromDB = await _context.Companies.FirstOrDefaultAsync(c => c.Id.Equals(id));
 
-        //    var companyFromDB = await _context.Companies.FirstOrDefaultAsync(c => c.Id.Equals(id));
+            //if (companyFromDB is null)
+            //    return NotFound();
 
-        //    if (companyFromDB is null)
-        //        return NotFound();
+            ////Add Employees if any new
+            //mapper.Map(dto, companyFromDB);
+            //await _context.SaveChangesAsync();
 
-        //    //Add Employees if any new
-        //    mapper.Map(dto, companyFromDB);
-        //    await _context.SaveChangesAsync();
+            //return Ok(mapper.Map<CompanyDto>(companyFromDB)); //For demo purpose
+            await serviceManager.CompanyService.UpdateAsync(id, dto);
 
-        //    return Ok(mapper.Map<CompanyDto>(companyFromDB)); //For demo purpose
-
-        //    return NoContent();
-        //}
+            return NoContent();
+        }
 
         //// POST: api/Companies
         //// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754

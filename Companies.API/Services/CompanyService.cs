@@ -44,5 +44,15 @@ namespace Companies.API.Services
             var dtos = mapper.Map<IEnumerable<CompanyDto>>(companies);
             return dtos;
         }
+
+        public async Task UpdateAsync(Guid id, CompanyForUpdateDto dto)
+        {
+            var company = await unitOfWork.CompanyRepository.GetAsync(id);
+
+            if (company is null) throw new CompanyNotFoundException(id);
+
+            mapper.Map(dto, company);
+            await unitOfWork.CompleteAsync();
+        }
     }
 }
