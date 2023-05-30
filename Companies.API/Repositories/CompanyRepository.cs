@@ -15,6 +15,11 @@ namespace Companies.API.Repositories
             this.context = context;
         }
 
+        public void DeleteCompany(Company company)
+        {
+            context.Companies.Remove(company);
+        }
+
         public async Task<Company?> GetAsync(Guid id)
         {
             return await context.Companies.FirstOrDefaultAsync(c => c.Id == id);

@@ -16,6 +16,16 @@ namespace Companies.API.Services
             this.mapper = mapper;
         }
 
+        public async Task DeleteAsync(Guid id)
+        {
+            var company = await unitOfWork.CompanyRepository.GetAsync(id);
+
+            if (company == null) throw new CompanyNotFoundException(id);
+
+            unitOfWork.CompanyRepository.DeleteCompany(company);
+            await unitOfWork.CompleteAsync();
+        }
+
         public async Task<CompanyDto> GetAsync(Guid id)
         {
             var company = await unitOfWork.CompanyRepository.GetAsync(id);
