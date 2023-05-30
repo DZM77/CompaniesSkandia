@@ -13,13 +13,14 @@ using Microsoft.AspNetCore.Mvc.Controllers;
 using Moq;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-
 namespace Employees.Tests.Controlers
 {
+[SuppressMessage("Style", "xUnit1013:Public method should be marked as test", Justification = "Dispose method is not a test")]
     public class CompaniesControllerTests : IClassFixture<CompaniesControllerFixture>
     {
         //private Mock<ICompanyRepository> mockRepo;
