@@ -2,6 +2,8 @@
 using Companies.API.DataTransferObjects;
 using Companies.API.Exceptions;
 using Companies.API.Repositories;
+using Notify.Messages;
+using NServiceBus;
 
 namespace Companies.API.Services
 {
@@ -9,11 +11,13 @@ namespace Companies.API.Services
     {
         private readonly IUnitOfWork unitOfWork;
         private readonly IMapper mapper;
+        private readonly IMessageSession messageSession;
 
-        public CompanyService(IUnitOfWork unitOfWork, IMapper mapper)
+        public CompanyService(IUnitOfWork unitOfWork, IMapper mapper, IMessageSession messageSession)
         {
             this.unitOfWork = unitOfWork;
             this.mapper = mapper;
+            this.messageSession = messageSession;
         }
 
         public async Task DeleteAsync(Guid id)
@@ -39,9 +43,16 @@ namespace Companies.API.Services
 
         public async Task<IEnumerable<CompanyDto>> GetCompaniesAsync(bool includeEmployees)
         {
-            //Maybe some logic here... 
+            
             var companies = await unitOfWork.CompanyRepository.GetCompaniesAsync(includeEmployees);
             var dtos = mapper.Map<IEnumerable<CompanyDto>>(companies);
+
+            var message = new CompanyControllerMessage
+            {
+                Message = "Hej"
+            };
+            await messageSession.Send(message).ConfigureAwait(false);
+
             return dtos;
         }
 

@@ -1,4 +1,3 @@
-
 using Companies.API.Data;
 using Companies.API.Entities;
 using Companies.API.Extensions;
@@ -9,6 +8,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
+using Notify.Messages;
+using NServiceBus;
 using System.Security.Claims;
 
 namespace Companies.API
@@ -18,6 +19,19 @@ namespace Companies.API
         public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            builder.Host.UseNServiceBus(context =>
+            {
+                var endpointConfiguration = new EndpointConfiguration("Companies.API.Sender");
+                var transport = endpointConfiguration.UseTransport(new LearningTransport());
+                transport.RouteToEndpoint(
+                    assembly: typeof(CompanyControllerMessage).Assembly,
+                    destination: "Notify.Endpoint");
+
+                endpointConfiguration.SendOnly();
+
+                return endpointConfiguration;
+            });
 
             // Add services to the container.
 
@@ -120,7 +134,7 @@ namespace Companies.API
 
             app.MapControllers();
 
-            app.Run();
+            await app.RunAsync();
         }
     }
 }

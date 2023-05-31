@@ -4,7 +4,7 @@ namespace Notify
 {
     internal class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             Console.Title = "Notify.Endpoint";
             var endpointConfiguration = new EndpointConfiguration("Notify.Endpoint");
