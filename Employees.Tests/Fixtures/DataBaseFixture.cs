@@ -24,12 +24,12 @@ namespace Employees.Tests.Fixtures
             }));
 
             var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-               .UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=TestDataBase;Trusted_Connection=True;MultipleActiveResultSets=true")
+               .UseInMemoryDatabase("TestDataBase")
                .Options;
 
             var context = new ApplicationDbContext(options);
 
-            context.Database.Migrate();
+           // context.Database.Migrate();
 
             context.Companies.AddRange(new Company[]
                      {
