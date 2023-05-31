@@ -14,7 +14,9 @@ using System.Threading.Tasks;
 
 namespace Employees.Tests.Controlers
 {
-    public class EmployeeControllerTest : IClassFixture<DataBaseFixture>
+
+    [Collection("DatabaseCollection")]
+    public class EmployeeControllerTest //: IClassFixture<DataBaseFixture>
     {
         private readonly DataBaseFixture fixture;
         private ApplicationDbContext context;
