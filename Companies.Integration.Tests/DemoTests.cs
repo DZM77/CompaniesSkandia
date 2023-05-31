@@ -1,5 +1,5 @@
+using Companies.API;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.VisualStudio.TestPlatform.TestHost;
 using System.Net;
 
 namespace Companies.Integration.Tests
