@@ -1,7 +1,11 @@
 ﻿using Companies.API.Controllers;
 using Companies.API.Data;
+using Companies.API.Paging;
 using Employees.Tests.Fixtures;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Primitives;
+using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,10 +43,24 @@ namespace Employees.Tests.Controlers
             var expectedCompanyId = context.Companies.First().Id;
             var sut = new EmplyeesController(context, fixture.Mapper);
 
-            var res = await sut.GetEmployeesForCompany(expectedCompanyId, null);
+            var mockHttpContext = new Mock<HttpContext>();
+            var mockHttpResponse = new Mock<HttpResponse>();
+            var mockHeaderDictionary = new Mock<IHeaderDictionary>();
+
+            sut.ControllerContext = new ControllerContext
+            {
+                HttpContext = mockHttpContext.Object
+            };
+
+            mockHttpContext.SetupGet(c => c.Response).Returns(mockHttpResponse.Object);
+            mockHttpResponse.SetupGet(r => r.Headers).Returns(mockHeaderDictionary.Object);
+
+
+            var res = await sut.GetEmployeesForCompany(expectedCompanyId, new ResourceParameters());
 
             Assert.NotNull(res);
             Assert.IsType<OkObjectResult>(res);
+            mockHeaderDictionary.Verify(h => h.Add("X-Pagination", It.IsAny<StringValues>()), Times.Once);
         }
     }
 }
