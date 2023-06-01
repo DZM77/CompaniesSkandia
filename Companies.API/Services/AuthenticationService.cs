@@ -17,15 +17,13 @@ namespace Companies.API.Services
     {
         private readonly IMapper mapper;
         private readonly UserManager<User> userManager;
-        private readonly IConfiguration configuration;
         private readonly JwtConfigurations jwtConfigurations;
         private User? user;
 
-        public AuthenticationService(IMapper mapper, UserManager<User> userManager, IConfiguration configuration, IOptions<JwtConfigurations> options)
+        public AuthenticationService(IMapper mapper, UserManager<User> userManager, IOptions<JwtConfigurations> options)
         {
             this.mapper = mapper;
             this.userManager = userManager;
-            this.configuration = configuration;
             this.jwtConfigurations = options.Value;
         }
 
@@ -160,8 +158,6 @@ namespace Companies.API.Services
 
         private ClaimsPrincipal GetPrincipalFromExpiredToken(string accessToken)
         {
-            var jwtSettings = configuration.GetSection("JwtSettings");
-
             var secretKey = Environment.GetEnvironmentVariable("SECRET");
             ArgumentNullException.ThrowIfNull(nameof(secretKey));
 
@@ -171,8 +167,8 @@ namespace Companies.API.Services
                 ValidateAudience = true,
                 ValidateLifetime = true,
                 ValidateIssuerSigningKey = true,
-                ValidIssuer = jwtSettings["validIssuer"],
-                ValidAudience = jwtSettings["validAudience"],
+                ValidIssuer = jwtConfigurations.ValidIssuer,
+                ValidAudience = jwtConfigurations.ValidAudience,
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey!))
             };
 
