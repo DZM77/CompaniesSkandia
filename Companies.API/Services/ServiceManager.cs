@@ -16,9 +16,9 @@ namespace Companies.API.Services
         public ICompanyService CompanyService => companyService.Value;
         public IAuthenticationService AuthenticationService => authenticationService.Value;
 
-        public ServiceManager(IUnitOfWork iUoW, IMapper mapper, IMessageSession messageSession, UserManager<User> userManager, IOptions<JwtConfigurations> options)
+        public ServiceManager(IUnitOfWork iUoW, IMapper mapper, IMessageSession messageSession, UserManager<User> userManager, IOptions<JwtConfigurations> options, IConfiguration configuration)
         {
-            authenticationService = new Lazy<IAuthenticationService>(() => new AuthenticationService(mapper, userManager, options));
+            authenticationService = new Lazy<IAuthenticationService>(() => new AuthenticationService(mapper, userManager, options, configuration));
             companyService = new Lazy<ICompanyService>(() => new CompanyService(iUoW, mapper, messageSession));
         }
     }

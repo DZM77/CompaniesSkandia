@@ -17,13 +17,15 @@ namespace Companies.API.Services
     {
         private readonly IMapper mapper;
         private readonly UserManager<User> userManager;
+        private readonly IConfiguration configuration;
         private readonly JwtConfigurations jwtConfigurations;
         private User? user;
 
-        public AuthenticationService(IMapper mapper, UserManager<User> userManager, IOptions<JwtConfigurations> options)
+        public AuthenticationService(IMapper mapper, UserManager<User> userManager, IOptions<JwtConfigurations> options, IConfiguration configuration)
         {
             this.mapper = mapper;
             this.userManager = userManager;
+            this.configuration = configuration;
             this.jwtConfigurations = options.Value;
         }
 
@@ -91,10 +93,11 @@ namespace Companies.API.Services
 
         private SigningCredentials GetSigningCredentials()
         {
-            var keyFromEnviroment = Environment.GetEnvironmentVariable("SECRET");
-            ArgumentNullException.ThrowIfNull(nameof(keyFromEnviroment));
+            //var keyFromEnviroment = Environment.GetEnvironmentVariable("SECRET");
+            var secretKey = configuration.GetValue<string>("SECRETKEY");
+            ArgumentNullException.ThrowIfNull(nameof(secretKey));
 
-            var key = Encoding.UTF8.GetBytes(keyFromEnviroment!);
+            var key = Encoding.UTF8.GetBytes(secretKey!);
             var secret = new SymmetricSecurityKey(key);
 
             return new SigningCredentials(secret, SecurityAlgorithms.HmacSha256);
@@ -158,7 +161,9 @@ namespace Companies.API.Services
 
         private ClaimsPrincipal GetPrincipalFromExpiredToken(string accessToken)
         {
-            var secretKey = Environment.GetEnvironmentVariable("SECRET");
+            //var secretKey = Environment.GetEnvironmentVariable("SECRET");
+            var secretKey = configuration.GetValue<string>("SECRETKEY");
+
             ArgumentNullException.ThrowIfNull(nameof(secretKey));
 
             var tokenValidationParameters = new TokenValidationParameters

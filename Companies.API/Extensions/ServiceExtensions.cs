@@ -29,7 +29,8 @@ public static class ServiceExtensions
 
         services.Configure<JwtConfigurations>(configuration.GetSection(JwtConfigurations.Section).Bind);
 
-        var secretKey = Environment.GetEnvironmentVariable("SECRET");
+        //var secretKey = Environment.GetEnvironmentVariable("SECRET");
+        var secretKey = configuration.GetValue<string>("SECRETKEY");
         ArgumentNullException.ThrowIfNull(nameof(secretKey));
 
         services.AddAuthentication(opt =>
