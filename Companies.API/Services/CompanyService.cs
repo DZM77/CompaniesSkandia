@@ -51,7 +51,7 @@ namespace Companies.API.Services
             {
                 Message = "Hej"
             };
-            await messageSession.Send(message).ConfigureAwait(false);
+           // await messageSession.Send(message).ConfigureAwait(false);
 
             return dtos;
         }
