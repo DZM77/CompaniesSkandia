@@ -2,6 +2,7 @@
 using Companies.API.Data;
 using Companies.API.DataTransferObjects;
 using Companies.API.Entities;
+using Companies.API.Filters;
 using Companies.API.Repositories;
 using Companies.API.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -31,25 +32,10 @@ namespace Companies.API.Controllers
 
 
         [HttpPut("{id}")]
+        [MatchingKeysFilter]
         public async Task<IActionResult> PutCompany(Guid id, CompanyForUpdateDto dto)
         {
-            if (id != dto.Id)
-            {
-                return BadRequest("Guid don't match");
-            }
-
-            //var companyFromDB = await _context.Companies.FirstOrDefaultAsync(c => c.Id.Equals(id));
-
-            //if (companyFromDB is null)
-            //    return NotFound();
-
-            ////Add Employees if any new
-            //mapper.Map(dto, companyFromDB);
-            //await _context.SaveChangesAsync();
-
-            //return Ok(mapper.Map<CompanyDto>(companyFromDB)); //For demo purpose
             await serviceManager.CompanyService.UpdateAsync(id, dto);
-
             return NoContent();
         }
 
