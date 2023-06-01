@@ -8,43 +8,23 @@ namespace Companies.API.Extensions
 {
     public static class ExceptionMiddlewareExtensions
     {
+        private static ProblemDetailsFactory problemDetailsFactory;
+
         public static void ConfigureExceptionHandler(this WebApplication app)
         {
             var logger = app.Services.GetRequiredService<ILogger<Exception>>();
-            var problemDetailsFactory = app.Services.GetRequiredService<ProblemDetailsFactory>();
+            problemDetailsFactory = app.Services.GetRequiredService<ProblemDetailsFactory>();
 
             app.UseExceptionHandler(appError =>
             {
                 appError.Run(async context =>
                 {
-                    //context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                    //context.Response.ContentType = "application/json";
                     var contextFeature = context.Features.Get<IExceptionHandlerFeature>();
                     if (contextFeature != null)
                     {
                         logger.LogError($"Exception middleware catches an exception: {contextFeature.Error}");
 
-                        ProblemDetails problemDetails = default!;
-                        int statusCode;
-
-                        switch (contextFeature.Error)
-                        {
-                            case CompanyNotFoundException companyNotFoundException:
-                                statusCode = StatusCodes.Status404NotFound;
-                                problemDetails = problemDetailsFactory.CreateProblemDetails(
-                                                                                context,
-                                                                                statusCode,
-                                                                                companyNotFoundException.Message);
-                                break;
-                            default:
-                                statusCode = StatusCodes.Status500InternalServerError;
-                                problemDetails = problemDetailsFactory.CreateProblemDetails(
-                                                                                context,
-                                                                                statusCode,
-                                                                                "Internal Server Error");
-                                break;
-                        }
-
+                        var problemDetails = GetErrorResponse(context, contextFeature, out int statusCode);
 
                         context.Response.StatusCode = statusCode;
                         context.Response.ContentType = "application/json";
@@ -52,6 +32,43 @@ namespace Companies.API.Extensions
                     }
                 });
             });
+        }
+
+        private static object GetErrorResponse(HttpContext context, IExceptionHandlerFeature contextFeature, out int statusCode)
+        {
+            object problemDetails = default!;
+
+            switch (contextFeature.Error)
+            {
+                case CompanyNotFoundException companyNotFoundException:
+                    statusCode = StatusCodes.Status404NotFound;
+                    problemDetails = problemDetailsFactory.CreateProblemDetails(
+                                                                    context,
+                                                                    statusCode,
+                                                                    companyNotFoundException.Message);
+                    break;
+                case BadRequestException badRequestException:
+                    statusCode = StatusCodes.Status422UnprocessableEntity;
+                    var problems = problemDetailsFactory.CreateProblemDetails(
+                                                                   context,
+                                                                   statusCode,
+                                                                   badRequestException.Message);
+                    problemDetails = new
+                    {
+                        errors = badRequestException.Errors,
+                        details = problems
+                    };
+                    break;
+                default:
+                    statusCode = StatusCodes.Status500InternalServerError;
+                    problemDetails = problemDetailsFactory.CreateProblemDetails(
+                                                                    context,
+                                                                    statusCode,
+                                                                    "Internal Server Error");
+                    break;
+            }
+
+            return problemDetails;
         }
     }
 }

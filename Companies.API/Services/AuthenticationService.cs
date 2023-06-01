@@ -103,7 +103,7 @@ namespace Companies.API.Services
             return new SigningCredentials(secret, SecurityAlgorithms.HmacSha256);
         }
 
-        public async Task<IdentityResult> RegisterUserAsync(EmployeeForCreationDto creationDto, string role)
+        public async Task<IdentityResult> RegisterUserAsync(EmployeeForCreationDto creationDto, string role, Guid companyId = default)
         {
             if (creationDto is null)
             {
@@ -117,12 +117,13 @@ namespace Companies.API.Services
 
             var user = mapper.Map<User>(creationDto);
 
+            if (companyId != default) user.CompanyId = companyId;
+
             var result = await userManager.CreateAsync(user, creationDto.Password);
 
             if (result.Succeeded)
             {
                 await userManager.AddToRoleAsync(user, "Admin");
-
             }
 
             return result;
