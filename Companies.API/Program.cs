@@ -22,7 +22,7 @@ namespace Companies.API
 
     //Eventuellt behöver du köra dotnet user-secrets init först men osäker i VS Code
 
-}
+
 public class Program
     {
         public static async Task Main(string[] args)
