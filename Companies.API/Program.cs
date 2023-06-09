@@ -36,7 +36,8 @@ namespace Companies.API
             // Add services to the container.
 
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
-               options.UseSqlServer(builder.Configuration.GetConnectionString("ApplicationDbContext") ?? throw new InvalidOperationException("Connection string 'ApplicationDbContext' not found.")));
+               //  options.UseSqlServer(builder.Configuration.GetConnectionString("ApplicationDbContext") ?? throw new InvalidOperationException("Connection string 'ApplicationDbContext' not found.")));
+               options.UseInMemoryDatabase("CompaniesInMemoryDB"));
 
 
             builder.Services.AddControllers(configure =>
