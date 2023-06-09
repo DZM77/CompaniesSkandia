@@ -50,6 +50,24 @@ namespace Companies.API.Data
             await db.SaveChangesAsync();
 
             await GenerateEmployeesAsync(30, companies);
+            await CreateAdmin();
+        }
+
+        private static async Task CreateAdmin()
+        {
+            var email = "kalle@anka.com";
+
+            var kalle = new User
+            {
+                UserName = email,
+                Email = email,
+                Name = "Kalle Anka",
+                Age = 50,
+                Position = "Developer"
+            };
+
+            await userManager.CreateAsync(kalle, passWord);
+            await AddToRoleeASync(kalle, adminRole);
         }
 
         private static async Task CreateRolesAsync(string[] roleNames)
