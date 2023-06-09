@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using Companies.API.DataTransferObjects;
+using Companies.API.Entities;
 using Companies.API.Exceptions;
 using Companies.API.Repositories;
+using Microsoft.AspNetCore.Authentication;
 using Notify.Messages;
 using NServiceBus;
 
@@ -12,12 +14,37 @@ namespace Companies.API.Services
         private readonly IUnitOfWork unitOfWork;
         private readonly IMapper mapper;
         private readonly IMessageSession messageSession;
+        private readonly Lazy<IAuthenticationService> authenticationService;
 
-        public CompanyService(IUnitOfWork unitOfWork, IMapper mapper, IMessageSession messageSession)
+        public CompanyService(IUnitOfWork unitOfWork, IMapper mapper, IMessageSession messageSession, Lazy<IAuthenticationService> authenticationService)
         {
             this.unitOfWork = unitOfWork;
             this.mapper = mapper;
             this.messageSession = messageSession;
+            this.authenticationService = authenticationService;
+        }
+
+        public async Task<CompanyDto> CreateCompanyAsync(CompanyForCreationDto company)
+        {
+            ArgumentNullException.ThrowIfNull(nameof(company));
+
+            var createdCompany = mapper.Map<Company>(company);
+            if (createdCompany.Employees != null)
+                createdCompany.Employees.Clear();
+
+            await unitOfWork.CompanyRepository.AddAsync(createdCompany);
+            await unitOfWork.CompleteAsync();
+
+            if (company.Employees != null && company.Employees.Any())
+            {
+                foreach (var user in company.Employees)
+                {
+                    var res = await authenticationService.Value.RegisterUserAsync(user, "Employee", createdCompany.Id);
+                    if (!res.Succeeded) throw new BadRequestException("One or more validation errors occurred", res.Errors);
+                }
+            }
+
+            return mapper.Map<CompanyDto>(createdCompany);
         }
 
         public async Task DeleteAsync(Guid id)

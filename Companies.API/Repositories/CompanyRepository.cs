@@ -15,6 +15,11 @@ namespace Companies.API.Repositories
             this.context = context;
         }
 
+        public async Task AddAsync(Company company)
+        {
+            await context.AddAsync(company);
+        }
+
         public void DeleteCompany(Company company)
         {
             context.Companies.Remove(company);

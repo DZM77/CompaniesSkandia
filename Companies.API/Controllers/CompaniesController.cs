@@ -39,27 +39,12 @@ namespace Companies.API.Controllers
             return NoContent();
         }
 
-        //// POST: api/Companies
-        //// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        //[HttpPost]
-        //public async Task<ActionResult<Company>> PostCompany(CompanyForCreationDto company)
-        //{
-
-        //    if (company is null)
-        //    {
-        //        return BadRequest();
-        //    }
-
-        //    var createdCompany = mapper.Map<Company>(company);
-        //    //ToDo Register Employyes as Users with Role Employees
-
-        //    _context.Companies.Add(createdCompany);
-        //    await _context.SaveChangesAsync();
-
-        //    var companyToReturn = mapper.Map<CompanyDto>(createdCompany);
-
-        //    return CreatedAtAction(nameof(GetCompany), new { id = companyToReturn.Id }, companyToReturn);
-        //}
+        [HttpPost]
+        public async Task<ActionResult<Company>> PostCompany(CompanyForCreationDto company)
+        {
+            var createdCompany = await serviceManager.CompanyService.CreateCompanyAsync(company);
+            return CreatedAtAction(nameof(GetCompany), new { id = createdCompany.Id }, createdCompany);
+        }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCompany(Guid id)

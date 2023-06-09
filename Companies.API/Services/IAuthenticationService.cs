@@ -7,7 +7,7 @@ namespace Companies.API.Services
     {
         Task<TokenDto> CreateTokenAsync(bool expTime);
         Task<TokenDto> RefreshTokenAsync(TokenDto token);
-        Task<IdentityResult> RegisterUserAsync(EmployeeForCreationDto creationDto, string role);
+        Task<IdentityResult> RegisterUserAsync(EmployeeForCreationDto creationDto, string role, Guid id = default);
         Task<bool> ValidateUserAsync(UserForAuthenticationDto userDto);
     }
 }
